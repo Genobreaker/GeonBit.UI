@@ -18,13 +18,13 @@ namespace GeonBit.UI.Entities
     /// </summary>
     public enum PanelSkin
     {
-        /// <summary>No skin, eg panel itself is invisible.</summary>
+        /// <summary>No skin, the panel itself is invisible.</summary>
         None = -1,
 
         /// <summary>Default panel texture.</summary>
         Default = 0,
 
-        /// <summary>Alternative panel texture.</summary>
+        /// <summary>Alternative more decorated panel texture.</summary>
         Fancy = 1,
 
         /// <summary>Simple, grey panel. Useful for internal frames, eg when inside another panel.</summary>
@@ -56,6 +56,27 @@ namespace GeonBit.UI.Entities
         PanelSkin _skin;
 
         /// <summary>
+        /// Optional alternative texture to use with this panel.
+        /// </summary>
+        protected Texture2D _customTexture;
+
+        /// <summary>
+        /// Custom frame size to use with optional custom texture.
+        /// </summary>
+        protected Vector2? _customFrame = null;
+
+        /// <summary>
+        /// Min size for panels when trying to auto-adjust height for child entities.
+        /// </summary>
+        public static float MinAutoAdjustHeight = 50f;
+
+        /// <summary>
+        /// If true, will set panel height automatically based on children.
+        /// Note: this will change the Size.Y property every time children under this panel change.
+        /// </summary>
+        public bool AdjustHeightAutomatically = false;
+
+        /// <summary>
         /// Create the panel.
         /// </summary>
         /// <param name="size">Panel size.</param>
@@ -85,12 +106,98 @@ namespace GeonBit.UI.Entities
         }
 
         /// <summary>
+        /// Draw this panel.
+        /// </summary>
+        /// <param name="spriteBatch">Spritebatch to use when drawing this panel.</param>
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            // adjust height automatically
+            if (AdjustHeightAutomatically && Visible)
+            {
+                if (!SetHeightBasedOnChildren())
+                {
+                    return;
+                }
+            }
+
+            // call base drawing function
+            base.Draw(spriteBatch);
+        }
+
+        /// <summary>
+        /// Set the panel's height to match its children automatically.
+        /// Note: to make this happen on its own every frame, set the 'AdjustHeightAutomatically' property to true.
+        /// </summary>
+        /// <returns>True if succeed to adjust height, false if couldn't for whatever reason.</returns>
+        public virtual bool SetHeightBasedOnChildren()
+        {
+            // get the absolute top of this panel, but if size is 0 skip
+            UpdateDestinationRectsIfDirty();
+            var selfDestRect = GetActualDestRect();
+            var selfTop = selfDestRect.Y - Padding.Y;
+
+            // calculate the max height this panel should have base on children
+            var maxHeight = MinAutoAdjustHeight;
+            bool didAdjustHeight = false;
+            foreach (var child in _children)
+            {
+                if (child.Size.Y != 0 &&
+                    !child.Draggable &&
+                    child.Visible &&
+                    (child.Anchor == Anchor.TopCenter || child.Anchor == Anchor.TopLeft || child.Anchor == Anchor.TopRight ||
+                    child.Anchor == Anchor.Auto || child.Anchor == Anchor.AutoCenter || child.Anchor == Anchor.AutoInline || child.Anchor == Anchor.AutoInlineNoBreak))
+                {
+                    // update child destination rects
+                    child.UpdateDestinationRectsIfDirty();
+
+                    // if child height is 0 skip it
+                    if (child.GetActualDestRect().Height == 0) { continue; }
+
+                    // get child height and check if should change this panel's height
+                    var childDestRect = child.GetDestRectForAutoAnchors();
+                    var currHeight = (childDestRect.Bottom + child.SpaceAfter.Y - selfTop);
+                    didAdjustHeight = true;
+                    if (currHeight > maxHeight)
+                    {
+                        maxHeight = currHeight;
+                    }
+                }
+            }
+
+            // check if need to update size
+            if ((Size.Y != maxHeight))
+            {
+                Size = new Vector2(Size.X, maxHeight / UserInterface.Active.GlobalScale);
+                UpdateDestinationRects();
+                foreach (var child in _children)
+                {
+                    child.UpdateDestinationRects();
+                }
+            }
+
+            // return if could adjust height
+            return didAdjustHeight;
+        }
+
+        /// <summary>
         /// Set / get current panel skin.
         /// </summary>
         public PanelSkin Skin
         {
             get { return _skin; }
             set { _skin = value; }
+        }
+
+        /// <summary>
+        /// Override the default theme textures and set a custom skin for this specific button.
+        /// </summary>
+        /// <remarks>You must provide all state textures when overriding button skin.</remarks>
+        /// <param name="customTexture">Texture to use for default state.</param>
+        /// <param name="frameWidth">The width of the custom texture's frame, in percents of texture size.</param>
+        public void SetCustomSkin(Texture2D customTexture, Vector2? frameWidth = null)
+        {
+            _customTexture = customTexture;
+            _customFrame = frameWidth ?? null;
         }
 
         /// <summary>
@@ -104,9 +211,9 @@ namespace GeonBit.UI.Entities
             if (_skin != PanelSkin.None)
             {
                 // get texture based on skin
-                Texture2D texture = Resources.PanelTextures[_skin];
-                TextureData data = Resources.PanelData[(int)_skin];
-                Vector2 frameSize = new Vector2(data.FrameWidth, data.FrameHeight);
+                Texture2D texture = _customTexture ?? Resources.panelTextures[_skin];
+                TextureData data = Resources.panelData[(int)_skin];
+                Vector2 frameSize = _customFrame ?? new Vector2(data.FrameWidth, data.FrameHeight);
 
                 // draw panel
                 UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, frameSize, 1f, FillColor, Scale);

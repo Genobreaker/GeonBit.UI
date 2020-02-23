@@ -50,7 +50,6 @@
     <Compile Include="Source\DefaultStyles.cs" />
     <Compile Include="Source\StyleProperty.cs" />
     <Compile Include="Source\TextureData.cs" />
-    <Compile Include="Source\ThemeSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

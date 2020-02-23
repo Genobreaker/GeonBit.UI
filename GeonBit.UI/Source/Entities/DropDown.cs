@@ -51,9 +51,6 @@ namespace GeonBit.UI.Entities
         /// <summary>Default styling for the dropdown currently-selected label. Note: loaded from UI theme xml file.</summary>
         public static StyleSheet DefaultSelectedParagraphStyle = new StyleSheet();
 
-        /// <summary>Default select list size in pixels.</summary>
-        new public static Vector2 DefaultSize = new Vector2(0f, 220f);
-
         // dictionary of special events for specific items selection
         private Dictionary<string, System.Action> _perItemCallbacks = new Dictionary<string, System.Action>();
 
@@ -171,7 +168,7 @@ namespace GeonBit.UI.Entities
                 _selectedTextPanel.Identifier = "_selectedTextPanel";
 
                 // create the arrow down icon
-                _arrowDownImage = new Image(Resources.ArrowDown, new Vector2(ArrowSize, ArrowSize), ImageDrawMode.Stretch, Anchor.CenterRight, new Vector2(-10, 0));
+                _arrowDownImage = new Image(Resources.arrowDown, new Vector2(ArrowSize, ArrowSize), ImageDrawMode.Stretch, Anchor.CenterRight, new Vector2(-10, 0));
                 _selectedTextPanel.AddChild(_arrowDownImage, true);
                 _arrowDownImage._hiddenInternalEntity = true;
                 _arrowDownImage.Identifier = "_arrowDownImage";
@@ -314,7 +311,7 @@ namespace GeonBit.UI.Entities
         /// This is useful for things like DropDown, that when opened they take a larger part of the screen, but we don't
         /// want it to push down other entities.
         /// </summary>
-        override protected Rectangle GetDestRectForAutoAnchors()
+        override internal protected Rectangle GetDestRectForAutoAnchors()
         {
             _selectedTextPanel.UpdateDestinationRectsIfDirty();
             return _selectedTextPanel.GetActualDestRect();
@@ -375,7 +372,7 @@ namespace GeonBit.UI.Entities
                 return;
 
             // update arrow image
-            _arrowDownImage.Texture = ListVisible ? Resources.ArrowUp : Resources.ArrowDown;
+            _arrowDownImage.Texture = ListVisible ? Resources.arrowUp : Resources.arrowDown;
 
             // focus on selectlist
             _selectList.IsFocused = true;

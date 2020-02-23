@@ -112,6 +112,23 @@ namespace GeonBit.UI.Entities
             base(size, skin, anchor, offset)
         {
             UpdateStyle(DefaultStyle);
+            if (size.Y == -1)
+            {
+                AdjustHeightAutomatically = true;
+            }
+        }
+
+        /// <summary>
+        /// Calculate and return the destination rectangle, eg the space this entity is rendered on.
+        /// </summary>
+        /// <returns>Destination rectangle.</returns>
+        override public Rectangle CalcDestRect()
+        {
+            if (AdjustHeightAutomatically && Size.Y <= 0)
+            {
+                _size.Y = 1;
+            }
+            return base.CalcDestRect();
         }
 
         /// <summary>
@@ -166,17 +183,45 @@ namespace GeonBit.UI.Entities
         /// <param name="spriteBatch">SpriteBatch used to draw entities.</param>
         protected override void BeforeDrawChildren(SpriteBatch spriteBatch)
         {
-            // if overflow mode is simply overflow, do nothing.
+            // if overflow mode is simply overflow, dispose render target if such exist
             if (_overflowMode == PanelOverflowBehavior.Overflow)
             {
                 DisposeRenderTarget();
-                return;
+            }
+            // if we have a render target, update it
+            else
+            {
+                UpdatePanelRenderTarget(spriteBatch);
+            }
+            
+        }
+
+        /// <summary>
+        /// Set the panel's height to match its children automatically.
+        /// Note: to make this happen on its own every frame, set the 'AdjustHeightAutomatically' property to true.
+        /// </summary>
+        /// <returns>True if succeed to adjust height, false if couldn't for whatever reason.</returns>
+        public override bool SetHeightBasedOnChildren()
+        {
+            // sanity check - not supported with scrollbar
+            if (PanelOverflowBehavior == PanelOverflowBehavior.VerticalScroll)
+            {
+                throw new Exceptions.InvalidStateException("Cannot set panel height automatically while having vertical scrollbar!");
             }
 
+            // call base implementation
+            return base.SetHeightBasedOnChildren();
+        }
+
+        /// <summary>
+        /// Update panel's render target.
+        /// </summary>
+        private void UpdatePanelRenderTarget(SpriteBatch spriteBatch)
+        {
             // create the render target for this panel
             Rectangle targetRect = GetRenderTargetRect();
-            if (_renderTarget == null || 
-                _renderTarget.Width != targetRect.Width || 
+            if (_renderTarget == null ||
+                _renderTarget.Width != targetRect.Width ||
                 _renderTarget.Height != targetRect.Height)
             {
                 // recreate render target
@@ -218,7 +263,7 @@ namespace GeonBit.UI.Entities
                 else
                 {
                     AddChild(_scrollbar);
-                }           
+                }
             }
 
             // to make sure the dest rect will not be recalculated while drawing children
@@ -341,6 +386,7 @@ namespace GeonBit.UI.Entities
         override protected void UpdateChildren(ref Entity targetEntity, ref Entity dragTargetEntity, ref bool wasEventHandled, Point scrollVal)
         {
             // if not in overflow mode and mouse not on this panel boundaries, skip calling children
+            // this is so we won't target / activate entities that are not visible
             bool skipChildren = false;
             if (_overflowMode != PanelOverflowBehavior.Overflow)
             {
@@ -362,6 +408,14 @@ namespace GeonBit.UI.Entities
             if (!skipChildren)
             {
                 base.UpdateChildren(ref targetEntity, ref dragTargetEntity, ref wasEventHandled, scrollVal);
+            }
+            // if don't update children at least update their animators
+            else
+            {
+                foreach (var child in _children)
+                {
+                    child.UpdateAnimators(true);
+                }
             }
 
             // re-enable scrollbar and update it

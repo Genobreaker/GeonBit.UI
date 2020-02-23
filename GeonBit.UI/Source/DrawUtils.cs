@@ -545,7 +545,7 @@ namespace GeonBit.UI
             // start drawing
             spriteBatch.Begin(SpriteSortMode.Deferred, UserInterface.Active.BlendState, UserInterface.Active.SamplerState,
                 DepthStencilState.None, RasterizerState.CullCounterClockwise,
-                isDisabled ? Resources.DisabledEffect : null);
+                isDisabled ? Resources.disabledEffect : null);
 
             // update drawing target
             UpdateRenderTarget(spriteBatch);
@@ -559,7 +559,7 @@ namespace GeonBit.UI
         {
             // start drawing silhouette
             spriteBatch.Begin(SpriteSortMode.Deferred, UserInterface.Active.BlendState, UserInterface.Active.SamplerState,
-                DepthStencilState.None, RasterizerState.CullCounterClockwise, Resources.SilhouetteEffect);
+                DepthStencilState.None, RasterizerState.CullCounterClockwise, Resources.silhouetteEffect);
 
             // update drawing target
             UpdateRenderTarget(spriteBatch);

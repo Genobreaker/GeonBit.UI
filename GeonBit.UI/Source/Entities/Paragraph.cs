@@ -100,8 +100,10 @@ namespace GeonBit.UI.Entities
             set { _wrapWords = value; MarkAsDirty(); }
         }
 
-        // text actual destination rect
-        Rectangle _actualDestRect = new Rectangle();
+        /// <summary>
+        /// Text actual destination rect.
+        /// </summary>
+        internal Rectangle _actualDestRect = new Rectangle();
 
         /// <summary>If the outline width is less than this value, the outline will be optimized but will appear slightly less sharp on corners.</summary>
         protected static int MaxOutlineWidthToOptimize = 1;
@@ -133,7 +135,7 @@ namespace GeonBit.UI.Entities
 
         // should we break words too long if in wrap mode?
         private bool _breakWordsIfMust = true;
-
+        
         /// <summary>
         /// If WrapWords is true and there's a word that's too long (eg longer than max width), will break the word in the middle.
         /// If false, word wrap will only break lines in between words (eg spaces) and never break words.
@@ -218,6 +220,17 @@ namespace GeonBit.UI.Entities
             SpriteFont font = GetCurrFont();
             float scale = Scale * BaseSize * GlobalScale;
             return SingleCharacterSize * scale;
+        }
+
+        /// <summary>
+        /// Get how many characters can fit in a single line.
+        /// </summary>
+        public int MaxCharactersInLine
+        {
+            get
+            {
+                return GetActualDestRect().Width / (int)GetCharacterActualSize().X;
+            }
         }
 
         /// <summary>
@@ -368,7 +381,7 @@ namespace GeonBit.UI.Entities
         /// <returns>Current font.</returns>
         protected SpriteFont GetCurrFont()
         {
-            return FontOverride ?? Resources.Fonts[(int)TextStyle];
+            return FontOverride ?? Resources.fonts[(int)TextStyle];
         }
 
         /// <summary>
@@ -401,7 +414,9 @@ namespace GeonBit.UI.Entities
 
                 // sanity test
                 if ((SingleCharacterSize.X * 2) != _currFont.MeasureString("!.").X)
+                {
                     throw new Exceptions.InvalidValueException("Cannot use non-monospace fonts!");
+                }
             }
         }
 
@@ -554,38 +569,14 @@ namespace GeonBit.UI.Entities
                 rect.Size += padding + padding;
 
                 // draw background color
-                spriteBatch.Draw(Resources.WhiteTexture, rect, backColor);
+                spriteBatch.Draw(Resources.whiteTexture, rect, backColor);
             }
 
-            // get outline width
+            // draw outilnes
             int outlineWidth = OutlineWidth;
-
-            // if we got outline draw it
             if (outlineWidth > 0)
             {
-                // get outline color
-                Color outlineColor = UserInterface.Active.DrawUtils.FixColorOpacity(OutlineColor);
-
-                // for not-too-thick outline we render just two corners
-                if (outlineWidth <= MaxOutlineWidthToOptimize)
-                {
-                    spriteBatch.DrawString(_currFont, _processedText, _position + Vector2.One * outlineWidth, outlineColor,
-                        0, _fontOrigin, _actualScale, SpriteEffects.None, 0.5f);
-                    spriteBatch.DrawString(_currFont, _processedText, _position - Vector2.One * outlineWidth, outlineColor,
-                        0, _fontOrigin, _actualScale, SpriteEffects.None, 0.5f);
-                }
-                // for really thick outline we need to cover the other corners as well
-                else
-                {
-                    spriteBatch.DrawString(_currFont, _processedText, _position + Vector2.UnitX * outlineWidth, outlineColor,
-                        0, _fontOrigin, _actualScale, SpriteEffects.None, 0.5f);
-                    spriteBatch.DrawString(_currFont, _processedText, _position - Vector2.UnitX * outlineWidth, outlineColor,
-                        0, _fontOrigin, _actualScale, SpriteEffects.None, 0.5f);
-                    spriteBatch.DrawString(_currFont, _processedText, _position + Vector2.UnitY * outlineWidth, outlineColor,
-                        0, _fontOrigin, _actualScale, SpriteEffects.None, 0.5f);
-                    spriteBatch.DrawString(_currFont, _processedText, _position - Vector2.UnitY * outlineWidth, outlineColor,
-                        0, _fontOrigin, _actualScale, SpriteEffects.None, 0.5f);
-                }
+                DrawTextOutline(spriteBatch, outlineWidth);
             }
 
             // get fill color
@@ -597,6 +588,53 @@ namespace GeonBit.UI.Entities
 
             // call base draw function
             base.DrawEntity(spriteBatch, phase);
+        }
+
+        /// <summary>
+        /// Draw text outline with default params.
+        /// </summary>
+        /// <param name="spriteBatch">Spritebatch to use.</param>
+        /// <param name="outlineWidth">Outline width.</param>
+        protected void DrawTextOutline(SpriteBatch spriteBatch, int outlineWidth)
+        {
+            // get outline color
+            Color outlineColor = UserInterface.Active.DrawUtils.FixColorOpacity(OutlineColor);
+            DrawTextOutline(spriteBatch, _processedText, outlineWidth, _currFont, _actualScale, _position, outlineColor, _fontOrigin);
+        }
+
+        /// <summary>
+        /// Draw text outline.
+        /// </summary>
+        /// <param name="spriteBatch">Sprite batch to use.</param>
+        /// <param name="text">Text to draw outline for.</param>
+        /// <param name="outlineWidth">Outline width.</param>
+        /// <param name="font">Text font.</param>
+        /// <param name="scale">Text absolute scale.</param>
+        /// <param name="position">Text position.</param>
+        /// <param name="outlineColor">Outline color.</param>
+        /// <param name="origin">Text origin.</param>
+        protected void DrawTextOutline(SpriteBatch spriteBatch, string text, int outlineWidth, SpriteFont font, float scale, Vector2 position, Color outlineColor, Vector2 origin)
+        {
+            // for not-too-thick outline we render just two corners
+            if (outlineWidth <= MaxOutlineWidthToOptimize)
+            {
+                spriteBatch.DrawString(font, text, position + Vector2.One * outlineWidth, outlineColor,
+                    0, origin, scale, SpriteEffects.None, 0.5f);
+                spriteBatch.DrawString(font, text, position - Vector2.One * outlineWidth, outlineColor,
+                    0, origin, scale, SpriteEffects.None, 0.5f);
+            }
+            // for really thick outline we need to cover the other corners as well
+            else
+            {
+                spriteBatch.DrawString(font, text, position + Vector2.UnitX * outlineWidth, outlineColor,
+                    0, origin, scale, SpriteEffects.None, 0.5f);
+                spriteBatch.DrawString(font, text, position - Vector2.UnitX * outlineWidth, outlineColor,
+                    0, origin, scale, SpriteEffects.None, 0.5f);
+                spriteBatch.DrawString(font, text, position + Vector2.UnitY * outlineWidth, outlineColor,
+                    0, origin, scale, SpriteEffects.None, 0.5f);
+                spriteBatch.DrawString(font, text, position - Vector2.UnitY * outlineWidth, outlineColor,
+                    0, origin, scale, SpriteEffects.None, 0.5f);
+            }
         }
     }
 }

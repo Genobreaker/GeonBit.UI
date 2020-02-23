@@ -92,9 +92,6 @@ namespace GeonBit.UI.Entities
         /// <summary>How fast to blink caret when text input is selected.</summary>
         public static float CaretBlinkingSpeed = 2f;
 
-        /// <summary>Default text-input size for when no size is provided or when -1 is set for either width or height.</summary>
-        new public static Vector2 DefaultSize = new Vector2(0f, 65f);
-
         /// <summary>The actual displayed text, after wordwrap and other processing. 
         /// note: only the text currently visible by scrollbar.</summary>
         string _actualDisplayText = string.Empty;
@@ -116,14 +113,14 @@ namespace GeonBit.UI.Entities
             // set multiline mode
             _multiLine = multiline;
 
-            // special case - if multiline and asked for default height, make it heigher
-            if (multiline && size.Y == -1)
-            {
-                _size.Y *= 4;
-            }
-
             // update default style
             UpdateStyle(DefaultStyle);
+            
+            // default size of multiline text input is 4 times bigger
+            if (multiline)
+            {
+                SetStyleProperty(StylePropertyIds.DefaultSize, new DataTypes.StyleProperty(EntityDefaultSize * new Vector2(1, 4)));
+            }
 
             // set limit by size - default true in single-line, default false in multi-line
             LimitBySize = !_multiLine;
@@ -149,10 +146,10 @@ namespace GeonBit.UI.Entities
                 UpdateMultilineState();
 
                 // if the default paragraph type is multicolor, disable it for input
-                MulticolorParagraph colorTextParagraph = TextParagraph as MulticolorParagraph;
+                RichParagraph colorTextParagraph = TextParagraph as RichParagraph;
                 if (colorTextParagraph != null)
                 {
-                    colorTextParagraph.EnableColorInstructions = false;
+                    colorTextParagraph.EnableStyleInstructions = false;
                 }
             }
         }
@@ -254,7 +251,12 @@ namespace GeonBit.UI.Entities
         public string Value
         {
             get { return _value; }
-            set { _value = _multiLine ? value : value.Replace("\n", string.Empty); FixCaretPosition(); }
+            set
+            {
+                value = value ?? string.Empty;
+                _value = _multiLine ? value : value.Replace("\n", string.Empty);
+                FixCaretPosition();
+            }
         }
 
         /// <summary>
@@ -428,7 +430,7 @@ namespace GeonBit.UI.Entities
             _actualDisplayText = PrepareInputTextForDisplay(showPlaceholder, IsFocused);
 
             // for multiline only - handle scrollbar visibility and max
-            if (_multiLine && _actualDisplayText != null)
+            if (_multiLine && (_actualDisplayText != null) && (_destRectInternal.Height > 0))
             {
                 // get how many lines can fit in the textbox and how many lines display text actually have
                 int linesFit = _destRectInternal.Height / (int)(System.Math.Max(currParagraph.GetCharacterActualSize().Y, 1));
@@ -562,7 +564,7 @@ namespace GeonBit.UI.Entities
 
                 // store old string and update based on user input
                 string oldVal = _value;
-                _value = KeyboardInput.GetTextInput(_value, ref pos);
+                _value = KeyboardInput.GetTextInput(_value, TextParagraph.MaxCharactersInLine, ref pos);
 
                 // update caret position
                 _caret = pos;

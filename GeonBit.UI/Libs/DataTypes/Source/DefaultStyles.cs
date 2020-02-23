@@ -1,14 +1,11 @@
-﻿using Microsoft.Xna.Framework;
-using System.Xml.Serialization;
-using Microsoft.Xna.Framework.Content;
+﻿using System.Xml.Serialization;
+using Microsoft.Xna.Framework;
 
-namespace GeonBit.UI.DataTypes
-{
+namespace GeonBit.UI.DataTypes {
     /// <summary>
     /// Font styles (should match the font styles defined in GeonBit.UI engine).
     /// </summary>
-    public enum _FontStyle
-    {
+    public enum _FontStyle {
         Regular,
         Bold,
         Italic
@@ -17,8 +14,7 @@ namespace GeonBit.UI.DataTypes
     /// <summary>
     /// All the stylesheet possible settings for an entity state.
     /// </summary>
-    public class DefaultStyles
-    {
+    public class DefaultStyles {
         // entity scale
         [XmlElement(IsNullable = true)]
         public float? Scale = null;
@@ -69,5 +65,9 @@ namespace GeonBit.UI.DataTypes
 
         // shadow scale
         public float? ShadowScale = null;
+
+        // default entity size
+        [XmlElement("Vector", IsNullable = true)]
+        public Vector2? DefaultSize = null;
     }
 }

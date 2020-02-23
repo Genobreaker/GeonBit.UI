@@ -61,9 +61,6 @@ namespace GeonBit.UI.Entities
         // button value when in toggle mode
         private bool _checked = false;
 
-        /// <summary>Default button size for when no size is provided or when -1 is set for either width or height.</summary>
-        new public static Vector2 DefaultSize = new Vector2(0f, 70f);
-
         /// <summary>Default styling for the button itself. Note: loaded from UI theme xml file.</summary>
         new public static StyleSheet DefaultStyle = new StyleSheet();
 
@@ -148,6 +145,23 @@ namespace GeonBit.UI.Entities
         }
 
         /// <summary>
+        /// Entity fill color opacity - this is just a sugarcoat to access the default fill color alpha style property.
+        /// </summary>
+        [System.Xml.Serialization.XmlIgnore]
+        public override byte Opacity
+        {
+            set
+            {
+                base.Opacity = value;
+                ButtonParagraph.Opacity = value;
+            }
+            get
+            {
+                return base.Opacity;
+            }
+        }
+
+        /// <summary>
         /// Is the button a natrually-interactable entity.
         /// </summary>
         /// <returns>True.</returns>
@@ -192,10 +206,10 @@ namespace GeonBit.UI.Entities
             if (Checked) { state = EntityState.MouseDown; }
            
             // get texture based on skin and state
-            Texture2D texture = _customSkin == null ? Resources.ButtonTextures[_skin, state] : _customSkin[(int)state];
+            Texture2D texture = _customSkin == null ? Resources.buttonTextures[_skin, state] : _customSkin[(int)state];
 
             // get frame width
-            TextureData data = Resources.ButtonData[(int)_skin];
+            TextureData data = Resources.buttonData[(int)_skin];
             Vector2 frameSize = _customSkin == null ? new Vector2(data.FrameWidth, data.FrameHeight) : _customFrame;
 
             // draw the button background with frame

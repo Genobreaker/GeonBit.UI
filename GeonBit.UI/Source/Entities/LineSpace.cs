@@ -31,9 +31,6 @@ namespace GeonBit.UI.Entities
         /// </summary>
         public static float SpaceSize = 8f;
 
-        /// <summary>Default size this entity will have when no size is provided or when -1 is set for either width or height.</summary>
-        new public static Vector2 DefaultSize = Vector2.Zero;
-
         /// <summary>
         /// Create a new Line Space entity.
         /// </summary>
@@ -47,12 +44,11 @@ namespace GeonBit.UI.Entities
             ClickThrough = true;
 
             // set size based on space count
-            _size.X = 0f;
-            _size.Y = spacesCount != 0 ? 
-                SpaceSize * GlobalScale * System.Math.Max(spacesCount, 0) : -1;
+            Size = new Vector2(0, 1);
 
             // default padding and spacing zero
-            SpaceAfter = SpaceBefore = Padding = Vector2.Zero;
+            SpaceBefore = Padding = Vector2.Zero;
+            SpaceAfter = new Vector2(0, SpaceSize * GlobalScale * spacesCount);
         }
 
         /// <summary>

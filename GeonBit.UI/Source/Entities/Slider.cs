@@ -63,9 +63,6 @@ namespace GeonBit.UI.Entities
         /// <summary>Actual mark width in pixels (used internally).</summary>
         protected int _markWidth = 20;
 
-        /// <summary>Default slider size for when no size is provided or when -1 is set for either width or height.</summary>
-        new public static Vector2 DefaultSize = new Vector2(0f, 30f);
-
         /// <summary>
         /// Create the slider.
         /// </summary>
@@ -269,11 +266,11 @@ namespace GeonBit.UI.Entities
         override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // get textures based on skin
-            Texture2D texture = Resources.SliderTextures[_skin];
-            Texture2D markTexture = Resources.SliderMarkTextures[_skin];
+            Texture2D texture = Resources.sliderTextures[_skin];
+            Texture2D markTexture = Resources.sliderMarkTextures[_skin];
 
             // get slider metadata
-            DataTypes.TextureData data = Resources.SliderData[(int)_skin];
+            DataTypes.TextureData data = Resources.sliderData[(int)_skin];
             float frameWidth = data.FrameWidth;
 
             // draw slider body

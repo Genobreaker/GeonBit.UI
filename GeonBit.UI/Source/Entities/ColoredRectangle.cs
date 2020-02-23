@@ -121,14 +121,14 @@ namespace GeonBit.UI.Entities
 				outlineDest.Y -= outlineWidth;
 				outlineDest.Width += outlineWidth * 2;
 				outlineDest.Height += outlineWidth * 2;
-				spriteBatch.Draw(Resources.WhiteTexture, outlineDest, OutlineColor);
+				spriteBatch.Draw(Resources.whiteTexture, outlineDest, OutlineColor);
 			}
 
             // get fill color
             Color fill = FillColor;
 
             // draw the rectangle
-            spriteBatch.Draw(Resources.WhiteTexture, _destRect, fill);
+            spriteBatch.Draw(Resources.whiteTexture, _destRect, fill);
 
             // call base draw function
             base.DrawEntity(spriteBatch, phase);

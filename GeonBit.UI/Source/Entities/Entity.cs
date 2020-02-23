@@ -64,6 +64,7 @@ namespace GeonBit.UI.Entities
         public static readonly string ShadowOffset = "ShadowOffset";
         public static readonly string OutlineColor = "OutlineColor";
         public static readonly string OutlineWidth = "OutlineWidth";
+        public static readonly string DefaultSize = "DefaultSize";
     }
 
     /// <summary>
@@ -145,8 +146,10 @@ namespace GeonBit.UI.Entities
             Entity.MakeSerializable(typeof(Entity));
         }
 
-        // list of child elements
-        private List<Entity> _children = new List<Entity>();
+        /// <summary>
+        /// List of child elements.
+        /// </summary>
+        protected internal List<Entity> _children = new List<Entity>();
 
         /// <summary>
         /// Get / set children list.
@@ -193,6 +196,9 @@ namespace GeonBit.UI.Entities
 
         /// <summary>Index inside parent.</summary>
         protected int _indexInParent;
+
+        // list of animators attached to this entity.
+        private List<Animators.IAnimator> _animators = new List<Animators.IAnimator>();
 
         /// <summary>
         /// Optional extra drawing priority, to bring certain objects before others.
@@ -503,9 +509,6 @@ namespace GeonBit.UI.Entities
         // true if this entity is currently being dragged.
         private bool _isBeingDragged = false;
 
-        /// <summary>Default size this entity will have when no size is provided or when -1 is set for either width or height.</summary>
-        public static Vector2 DefaultSize = Vector2.Zero;
-
         /// <summary>If true, users will not be able to drag this entity outside its parent boundaries.</summary>
         public bool LimitDraggingToParentBoundaries = true;
 
@@ -520,18 +523,13 @@ namespace GeonBit.UI.Entities
             // set as dirty (eg need to recalculate destination rect)
             MarkAsDirty();
 
-            // store size, anchor and offset
-            Vector2 defaultSize = EntityDefaultSize;
-            _size = size ?? defaultSize;
-            _offset = offset ?? Vector2.Zero;
-            _anchor = anchor;
-
             // set basic default style
             UpdateStyle(DefaultStyle);
 
-            // check default size on specific axises
-            if (_size.X == -1) { _size.X = defaultSize.X; }
-            if (_size.Y == -1) { _size.Y = defaultSize.Y; }
+            // store size, anchor and offset
+            _size = size ?? USE_DEFAULT_SIZE;
+            _offset = offset ?? Vector2.Zero;
+            _anchor = anchor;
         }
 
         /// <summary>
@@ -541,23 +539,8 @@ namespace GeonBit.UI.Entities
         {
             get
             {
-                // get current class type
-                System.Type type = GetType();
-
-                // try to get default size static property, and if not found, climb to parent class until DefaultSize is defined.
-                // note: eventually it will stop at Entity, since we have defined default size here.
-                while (true)
-                {
-                    // try to get DefaultSize field and if found return it
-                    FieldInfo field = type.GetField("DefaultSize", BindingFlags.Public | BindingFlags.Static);
-                    if (field != null)
-                    {
-                        return (Vector2)(field.GetValue(null));
-                    }
-
-                    // if not found climb up to parent
-                    type = type.BaseType;
-                }
+                var ret = GetStyleProperty(StylePropertyIds.DefaultSize, EntityState.Default, true).asVector;
+                return ret;
             }
         }
 
@@ -858,13 +841,19 @@ namespace GeonBit.UI.Entities
         /// Entity fill color opacity - this is just a sugarcoat to access the default fill color alpha style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
-        public byte Opacity
+        public virtual byte Opacity
         {
             set
             {
+                // update fill color
                 Color col = FillColor;
                 col.A = value;
                 SetStyleProperty(StylePropertyIds.FillColor, new StyleProperty(col), markAsDirty: false);
+
+                // update outline color
+                col = OutlineColor;
+                col.A = value;
+                SetStyleProperty(StylePropertyIds.OutlineColor, new StyleProperty(col), markAsDirty: false);
             }
             get
             {
@@ -1205,22 +1194,22 @@ namespace GeonBit.UI.Entities
 
             // first draw whole dest rect
             var destRectCol = new Color(0f, 1f, 0.25f, 0.05f);
-            spriteBatch.Draw(Resources.WhiteTexture, _destRect, destRectCol);
+            spriteBatch.Draw(Resources.whiteTexture, _destRect, destRectCol);
 
             // now draw internal dest rect
             var internalCol = new Color(1f, 0.5f, 0f, 0.5f);
-            spriteBatch.Draw(Resources.WhiteTexture, _destRectInternal, internalCol);
+            spriteBatch.Draw(Resources.whiteTexture, _destRectInternal, internalCol);
 
             // draw space before
             var spaceColor = new Color(0f, 0f, 0.5f, 0.5f);
             if (SpaceBefore.X > 0)
             {
-                spriteBatch.Draw(Resources.WhiteTexture,
+                spriteBatch.Draw(Resources.whiteTexture,
                     new Rectangle((int)(_destRect.Left - _scaledSpaceBefore.X), _destRect.Y, (int)_scaledSpaceBefore.X, _destRect.Height), spaceColor);
             }
             if (SpaceBefore.Y > 0)
             {
-                spriteBatch.Draw(Resources.WhiteTexture,
+                spriteBatch.Draw(Resources.whiteTexture,
                     new Rectangle(_destRect.X, (int)(_destRect.Top - _scaledSpaceBefore.Y), _destRect.Width, (int)_scaledSpaceBefore.Y), spaceColor);
             }
 
@@ -1228,12 +1217,12 @@ namespace GeonBit.UI.Entities
             spaceColor = new Color(0.5f, 0f, 0.5f, 0.5f);
             if (SpaceAfter.X > 0)
             {
-                spriteBatch.Draw(Resources.WhiteTexture,
+                spriteBatch.Draw(Resources.whiteTexture,
                     new Rectangle(_destRect.Right, _destRect.Y, (int)_scaledSpaceAfter.X, _destRect.Height), spaceColor);
             }
             if (SpaceAfter.Y > 0)
             {
-                spriteBatch.Draw(Resources.WhiteTexture,
+                spriteBatch.Draw(Resources.whiteTexture,
                     new Rectangle(_destRect.X, _destRect.Bottom, _destRect.Width, (int)_scaledSpaceAfter.Y), spaceColor);
             }
 
@@ -1620,21 +1609,50 @@ namespace GeonBit.UI.Entities
         }
 
         /// <summary>
+        /// Add animator to this entity.
+        /// </summary>
+        /// <param name="animator">Animator to attach.</param>
+        public Animators.IAnimator AttachAnimator(Animators.IAnimator animator)
+        {
+            animator.SetTargetEntity(this);
+            _animators.Add(animator);
+            return animator;
+        }
+
+        /// <summary>
+        /// Remove animator from entity.
+        /// </summary>
+        /// <param name="animator">Animator to remove.</param>
+        public void RemoveAnimator(Animators.IAnimator animator)
+        {
+            if (_animators.Remove(animator))
+            {
+                animator.SetTargetEntity(null);
+            }
+        }
+
+        /// <summary>
         /// Takes a size value in vector, that can be in percents or units, and convert it to absolute
         /// size in pixels. For example, if given size is 0.5f this will calculate it to be half its parent
         /// size, as it should be.
         /// </summary>
         /// <param name="size">Size to calculate.</param>
         /// <returns>Actual size in pixels.</returns>
-        protected Point CalcActualSizeInPixels(Vector2 size)
+        protected virtual Point CalcActualSizeInPixels(Vector2 size)
         {
             // simple case: if size is not in percents, just return as-is
             if (size.X > 1f && size.Y > 1f)
+            {
                 return size.ToPoint();
+            }
 
             // get parent internal destination rectangle
-            _parent.UpdateDestinationRectsIfDirty();
-            Rectangle parentDest = _parent._destRectInternal;
+            var parentDest = UserInterface.Active.Root._destRect;
+            if (_parent != null)
+            {
+                _parent.UpdateDestinationRectsIfDirty();
+                parentDest = _parent._destRectInternal;
+            }
 
             // calc and return size
             return new Point(
@@ -1651,15 +1669,25 @@ namespace GeonBit.UI.Entities
             // create new rectangle
             Rectangle ret = new Rectangle();
 
-            // no parent? stop here and return empty rect
-            if (_parent == null)
+            // no parent? assume active interface root as parent
+            var parent = _parent;
+            if (parent == null)
             {
-                return ret;
+                parent = UserInterface.Active.Root;
+            }
+
+            // set default size
+            var originSize = _size;
+            if (_size.X == -1 || _size.Y == -1)
+            {
+                Vector2 defaultSize = EntityDefaultSize;
+                if (_size.X == -1) { _size.X = defaultSize.X; }
+                if (_size.Y == -1) { _size.Y = defaultSize.Y; }
             }
 
             // get parent internal destination rectangle
-            _parent.UpdateDestinationRectsIfDirty();
-            Rectangle parentDest = _parent._destRectInternal;
+            parent.UpdateDestinationRectsIfDirty();
+            Rectangle parentDest = parent._destRectInternal;
 
             // set size:
             // 0: takes whole parent size.
@@ -1667,6 +1695,7 @@ namespace GeonBit.UI.Entities
             // > 1.0: size in pixels.
             Vector2 size = _scaledSize;
             Point sizeInPixels = CalcActualSizeInPixels(size);
+            _size = originSize;
 
             // apply min size
             if (MinSize != null)
@@ -1765,7 +1794,7 @@ namespace GeonBit.UI.Entities
             }
 
             // special case for auto anchors
-            if ((anchor == Anchor.Auto || anchor == Anchor.AutoInline || anchor == Anchor.AutoCenter || anchor == Anchor.AutoInlineNoBreak) && _parent != null)
+            if ((anchor == Anchor.Auto || anchor == Anchor.AutoInline || anchor == Anchor.AutoCenter || anchor == Anchor.AutoInlineNoBreak))
             {
                 // get previous entity before this
                 Entity prevEntity = GetPreviousEntity(true);
@@ -1784,7 +1813,7 @@ namespace GeonBit.UI.Entities
                     }
 
                     // handle inline align that ran out of width / or auto anchor not inline
-                    if ((anchor == Anchor.AutoInline && ret.Right > _parent._destRectInternal.Right) ||
+                    if ((anchor == Anchor.AutoInline && ret.Right > parent._destRectInternal.Right) ||
                         (anchor == Anchor.Auto || anchor == Anchor.AutoCenter))
                     {
                         // align x
@@ -1851,7 +1880,7 @@ namespace GeonBit.UI.Entities
         /// This is useful for things like DropDown, that when opened they take a larger part of the screen, but we don't
         /// want it to push down other entities.
         /// </summary>
-        virtual protected Rectangle GetDestRectForAutoAnchors()
+        virtual internal protected Rectangle GetDestRectForAutoAnchors()
         {
             return GetActualDestRect();
         }
@@ -2160,6 +2189,34 @@ namespace GeonBit.UI.Entities
         public bool IsMouseOver { get { return _isMouseOver; } }
 
         /// <summary>
+        /// Update all animators attached to this entity.
+        /// </summary>
+        /// <param name="recursive">If true, will also update children's animators</param>
+        protected internal void UpdateAnimators(bool recursive)
+        {
+            // update animators
+            foreach (var animator in _animators)
+            {
+                if (animator.Enabled)
+                {
+                    animator.Update();
+                }
+            }
+
+            // remove animators that are done
+            _animators.RemoveAll(x => x.IsDone && x.ShouldRemoveWhenDone);
+
+            // update children animations
+            if (recursive)
+            {
+                foreach (var child in _children)
+                {
+                    child.UpdateAnimators(true);
+                }
+            }
+        }
+
+        /// <summary>
         /// Mark that this entity boundaries or style changed and it need to recalculate cached destination rect and other things.
         /// </summary>
         internal protected void MarkAsDirty()
@@ -2208,6 +2265,9 @@ namespace GeonBit.UI.Entities
         {
             // set last scroll var
             _lastScrollVal = scrollVal;
+
+            // update animations
+            UpdateAnimators(false);
 
             // check if should invoke the spawn effect
             if (_isFirstUpdate)

@@ -144,9 +144,6 @@ namespace GeonBit.UI.Entities
         /// <summary>If true, will draw inventory-like background to this icon.</summary>
         public bool DrawBackground = false;
 
-        /// <summary>Default icon size for when no size is provided or when -1 is set for either width or height.</summary>
-        new public static Vector2 DefaultSize = new Vector2(50f, 50f);
-
         /// <summary>Default styling for icons. Note: loaded from UI theme xml file.</summary>
         new public static StyleSheet DefaultStyle = new StyleSheet();
 
@@ -161,7 +158,7 @@ namespace GeonBit.UI.Entities
         public IconType IconType
         {
             get { return _icon; }
-            set { Texture = Resources.IconTextures[value]; _icon = value; }
+            set { Texture = Resources.iconTextures[value]; _icon = value; }
         }
         IconType _icon;
 
@@ -235,7 +232,7 @@ namespace GeonBit.UI.Entities
                 dest.X -= BackgroundSize / 2; dest.Y -= BackgroundSize / 2; dest.Width += BackgroundSize; dest.Height += BackgroundSize;
 
                 // draw background
-                UserInterface.Active.DrawUtils.DrawImage(spriteBatch, Resources.IconBackgroundTexture, dest, backColor);
+                UserInterface.Active.DrawUtils.DrawImage(spriteBatch, Resources.iconBackgroundTexture, dest, backColor);
             }
 
             // now draw the image itself

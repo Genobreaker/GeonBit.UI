@@ -117,9 +117,6 @@ namespace GeonBit.UI.Entities
         /// </summary>
         public int MaxItems = 0;
 
-        /// <summary>Default select list size in pixels.</summary>
-        new public static Vector2 DefaultSize = new Vector2(0f, 220f);
-
         /// <summary>
         /// Create the select list.
         /// </summary>
@@ -313,6 +310,17 @@ namespace GeonBit.UI.Entities
             {
                 _scrollbar.Value = _list.Count;
             }
+        }
+
+        /// <summary>
+        /// Set the panel's height to match its children automatically.
+        /// Note: to make this happen on its own every frame, set the 'AdjustHeightAutomatically' property to true.
+        /// </summary>
+        /// <returns>True if succeed to adjust height, false if couldn't for whatever reason.</returns>
+        public override bool SetHeightBasedOnChildren()
+        {
+            MatchHeightToList();
+            return true;
         }
 
         /// <summary>
