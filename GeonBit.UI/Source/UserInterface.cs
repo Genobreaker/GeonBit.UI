@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
+using GeonBit.UI.DataTypes.Metadata;
 using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -414,7 +415,7 @@ namespace GeonBit.UI {
         /// </summary>
         /// <param name="type">What type of cursor to show.</param>
         public void SetCursor(CursorType type) {
-            DataTypes.CursorTextureData data = Resources.cursorsData[(int)type];
+            CursorTextureData data = Resources.cursorsData[(int)type];
             SetCursor(Resources.cursors[type], data.DrawWidth, new Point(data.OffsetX, data.OffsetY));
         }
 

@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GeonBit.UI.DataTypes;
+using GeonBit.UI.DataTypes.Metadata;
 
 namespace GeonBit.UI.Entities
 {

@@ -33,47 +33,47 @@
 /processorParam:DebugMode=Auto
 /build:effects/silhouette.fx
 
-#begin Fonts/AnonymousPro-Bold.ttf
-/copy:Fonts/AnonymousPro-Bold.ttf
+#begin fonts/AnonymousPro-Bold.ttf
+/copy:fonts/AnonymousPro-Bold.ttf
 
-#begin Fonts/AnonymousPro-Italic.ttf
-/copy:Fonts/AnonymousPro-Italic.ttf
+#begin fonts/AnonymousPro-Italic.ttf
+/copy:fonts/AnonymousPro-Italic.ttf
 
-#begin Fonts/AnonymousPro-Regular.ttf
-/copy:Fonts/AnonymousPro-Regular.ttf
+#begin fonts/AnonymousPro-Regular.ttf
+/copy:fonts/AnonymousPro-Regular.ttf
 
-#begin Fonts/Bitstream Vera Sans Mono Bold Oblique.ttf
-/copy:Fonts/Bitstream Vera Sans Mono Bold Oblique.ttf
+#begin fonts/Bitstream Vera Sans Mono Bold Oblique.ttf
+/copy:fonts/Bitstream Vera Sans Mono Bold Oblique.ttf
 
-#begin Fonts/Bitstream Vera Sans Mono Bold.ttf
-/copy:Fonts/Bitstream Vera Sans Mono Bold.ttf
+#begin fonts/Bitstream Vera Sans Mono Bold.ttf
+/copy:fonts/Bitstream Vera Sans Mono Bold.ttf
 
-#begin Fonts/Bitstream Vera Sans Mono Oblique.ttf
-/copy:Fonts/Bitstream Vera Sans Mono Oblique.ttf
+#begin fonts/Bitstream Vera Sans Mono Oblique.ttf
+/copy:fonts/Bitstream Vera Sans Mono Oblique.ttf
 
-#begin Fonts/Bitstream Vera Sans Mono Roman.ttf
-/copy:Fonts/Bitstream Vera Sans Mono Roman.ttf
+#begin fonts/Bitstream Vera Sans Mono Roman.ttf
+/copy:fonts/Bitstream Vera Sans Mono Roman.ttf
 
-#begin Fonts/Bold.spritefont
+#begin fonts/Bold.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:Fonts/Bold.spritefont
+/build:fonts/Bold.spritefont
 
-#begin Fonts/Italic.spritefont
+#begin fonts/Italic.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:Fonts/Italic.spritefont
+/build:fonts/Italic.spritefont
 
-#begin Fonts/Regular.spritefont
+#begin fonts/Regular.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:Fonts/Regular.spritefont
+/build:fonts/Regular.spritefont
 
 #begin styles/Button-Default.xml
 /importer:XmlImporter

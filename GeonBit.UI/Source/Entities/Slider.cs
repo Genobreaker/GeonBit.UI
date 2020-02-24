@@ -8,6 +8,7 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
+using GeonBit.UI.DataTypes.Metadata;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -270,7 +271,7 @@ namespace GeonBit.UI.Entities
             Texture2D markTexture = Resources.sliderMarkTextures[_skin];
 
             // get slider metadata
-            DataTypes.TextureData data = Resources.sliderData[(int)_skin];
+            TextureData data = Resources.sliderData[(int)_skin];
             float frameWidth = data.FrameWidth;
 
             // draw slider body

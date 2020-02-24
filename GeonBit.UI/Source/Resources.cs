@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GeonBit.UI.DataTypes;
+using GeonBit.UI.DataTypes.Metadata;
 using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -114,8 +115,8 @@ namespace GeonBit.UI {
                 sliderData[(int)skin] = content.Load<TextureData>("textures/slider_" + skinName + "_md");
             }
 
-            fonts = new SpriteFont[Enum.GetValues(typeof(FontStyle)).Length];
-            foreach (FontStyle style in Enum.GetValues(typeof(FontStyle))) {
+            fonts = new SpriteFont[Enum.GetValues(typeof(Entities.FontStyle)).Length];
+            foreach (Entities.FontStyle style in Enum.GetValues(typeof(Entities.FontStyle))) {
                 fonts[(int)style] = content.Load<SpriteFont>("fonts/" + style.ToString());
                 fonts[(int)style].LineSpacing += 2;
             }
