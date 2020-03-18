@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using GeonBit.UI.Utils;
+using GeonBit.UI.Enums;
 
 namespace GeonBit.UI.Entities
 {
@@ -529,7 +530,7 @@ namespace GeonBit.UI.Entities
             if (_index == -1)
             {
                 _value = null;
-                if (UserInterface.Active.SilentSoftErrors) return;
+                if (UserInterface.Instance.SilentSoftErrors) return;
                 throw new Exceptions.NotFoundException("Value to set not found in list!");
             }
 
@@ -559,7 +560,7 @@ namespace GeonBit.UI.Entities
             // make sure legal index
             if (index >= -1 && index >= _list.Count)
             {
-                if (UserInterface.Active.SilentSoftErrors) return;
+                if (UserInterface.Instance.SilentSoftErrors) return;
                 throw new Exceptions.NotFoundException("Invalid list index to select!");
             }
 

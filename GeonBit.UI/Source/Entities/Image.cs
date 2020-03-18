@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GeonBit.UI.DataTypes;
+using GeonBit.UI.Enums;
 
 namespace GeonBit.UI.Entities
 {
@@ -184,12 +185,12 @@ namespace GeonBit.UI.Entities
             {
                 // panel mode
                 case ImageDrawMode.Panel:
-                    UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, Texture, _destRect, FrameWidth, Scale, FillColor);
+                    UserInterface.Instance.DrawUtils.DrawSurface(spriteBatch, Texture, _destRect, FrameWidth, Scale, FillColor);
                     break;
 
                 // stretch mode
                 case ImageDrawMode.Stretch:
-                    UserInterface.Active.DrawUtils.DrawImage(spriteBatch, Texture, _destRect, FillColor, Scale, SourceRectangle);
+                    UserInterface.Instance.DrawUtils.DrawImage(spriteBatch, Texture, _destRect, FillColor, Scale, SourceRectangle);
                     break;
             }
 

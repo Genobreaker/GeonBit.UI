@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GeonBit.UI.DataTypes;
+using GeonBit.UI.Enums;
 
 namespace GeonBit.UI.Entities
 {
@@ -101,7 +102,7 @@ namespace GeonBit.UI.Entities
             // remove self padding
             Padding = Vector2.Zero;
 
-            if (!UserInterface.Active._isDeserializing)
+            if (!UserInterface.Instance._isDeserializing)
             {
                 // create the internal panel that contains everything - buttons + panels
                 _internalRoot = new Panel(Vector2.Zero, PanelSkin.None, Anchor.TopCenter);
@@ -218,7 +219,7 @@ namespace GeonBit.UI.Entities
             }
 
             // tab not found?
-            if (UserInterface.Active.SilentSoftErrors) return;
+            if (UserInterface.Instance.SilentSoftErrors) return;
             throw new Exceptions.NotFoundException("Tab not found!");
         }
 

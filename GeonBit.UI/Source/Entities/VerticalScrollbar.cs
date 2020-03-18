@@ -6,6 +6,7 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
+using GeonBit.UI.Enums;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -120,7 +121,7 @@ namespace GeonBit.UI.Entities
         override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // if needed, recalc max (but not if currently interacting with this object).
-            if (UserInterface.Active.ActiveEntity != this)
+            if (UserInterface.Instance.ActiveEntity != this)
             {
                 CalcAutoMaxValue();
             }
@@ -131,7 +132,7 @@ namespace GeonBit.UI.Entities
             float FrameHeight = Resources.verticalScrollbarData.FrameHeight;
 
             // draw scrollbar body
-            UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, new Vector2(0f, FrameHeight), 1, FillColor);
+            UserInterface.Instance.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, new Vector2(0f, FrameHeight), 1, FillColor);
 
             // calc frame actual height and scaling factor (this is needed to calc frame width in pixels)
             Vector2 frameSizeTexture = new Vector2(texture.Width, texture.Height * FrameHeight);
@@ -148,7 +149,7 @@ namespace GeonBit.UI.Entities
             // now draw mark
             float markY = _destRect.Y + _frameActualHeight + _markHeight * 0.5f + (_destRect.Height - _frameActualHeight * 2 - _markHeight) * (GetValueAsPercent());
             Rectangle markDest = new Rectangle(_destRect.X, (int)System.Math.Round(markY) - _markHeight / 2, markWidth, _markHeight);
-            UserInterface.Active.DrawUtils.DrawImage(spriteBatch, markTexture, markDest, FillColor);
+            UserInterface.Instance.DrawUtils.DrawImage(spriteBatch, markTexture, markDest, FillColor);
         }
 
         /// <summary>
@@ -159,9 +160,9 @@ namespace GeonBit.UI.Entities
         {
             // if the active entity is self or parent, listen to mousewheel
             if (_isInteractable &&
-                (UserInterface.Active.ActiveEntity == this ||
-                UserInterface.Active.ActiveEntity == _parent ||
-                (UserInterface.Active.ActiveEntity != null && UserInterface.Active.ActiveEntity.IsDeepChildOf(_parent))))
+                (UserInterface.Instance.ActiveEntity == this ||
+                UserInterface.Instance.ActiveEntity == _parent ||
+                (UserInterface.Instance.ActiveEntity != null && UserInterface.Instance.ActiveEntity.IsDeepChildOf(_parent))))
             {
                 if (MouseInput.MouseWheelChange != 0)
                 {

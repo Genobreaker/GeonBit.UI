@@ -16,6 +16,7 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
+using GeonBit.UI.Enums;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -62,7 +63,7 @@ namespace GeonBit.UI.Entities
             // update default styles
             UpdateStyle(DefaultStyle);
 
-            if (!UserInterface.Active._isDeserializing)
+            if (!UserInterface.Instance._isDeserializing)
             {
                 // create the fill part
                 Padding = Vector2.Zero;
@@ -123,7 +124,7 @@ namespace GeonBit.UI.Entities
 
             // draw progress bar frame
             Texture2D barTexture = Resources.progressBarTexture;
-            UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, barTexture, _destRect, new Vector2(progressbarFrameWidth, 0f), 1, FillColor);
+            UserInterface.Instance.DrawUtils.DrawSurface(spriteBatch, barTexture, _destRect, new Vector2(progressbarFrameWidth, 0f), 1, FillColor);
 
             // calc frame actual height and scaling factor (this is needed to calc frame width in pixels)
             Vector2 frameSizeTexture = new Vector2(barTexture.Width * progressbarFrameWidth, barTexture.Height);

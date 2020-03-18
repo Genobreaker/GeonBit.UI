@@ -1,5 +1,6 @@
 ﻿using System;
 using GeonBit.UI.Entities;
+using GeonBit.UI.Enums;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace GeonBit.UI {

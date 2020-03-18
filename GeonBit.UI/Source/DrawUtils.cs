@@ -30,7 +30,7 @@ namespace GeonBit.UI
         public void PushRenderTarget(RenderTarget2D target)
         {
             // sanity check - make sure we are in use-render-target mode
-            if (!UserInterface.Active.UseRenderTarget)
+            if (!UserInterface.Instance.UseRenderTarget)
             {
                 throw new Exceptions.InvalidStateException("UserInterface.Active.UseRenderTarget must be 'true' to use render-target features!");
             }
@@ -82,7 +82,7 @@ namespace GeonBit.UI
         /// Get a 2d vector and convert to a Point object, while applying Floor() to make sure its round down.
         /// </summary>
         /// <param name="vector">Vector to convert to point.</param>
-        /// <returns>new rounded point instance.</returns>
+        /// <returns>new rounded point Instance.</returns>
         protected Point VectorToRoundPoint(Vector2 vector)
         {
             return new Point((int)System.Math.Floor(vector.X), (int)System.Math.Floor(vector.Y));
@@ -171,7 +171,7 @@ namespace GeonBit.UI
             Rectangle destRect = new Rectangle();
 
             // factor used to scale between source in texture file and dest on the screen
-            float ScaleFactor = UserInterface.Active.GlobalScale * frameScale;
+            float ScaleFactor = UserInterface.Instance.GlobalScale * frameScale;
 
             // calc the surface frame size in texture file (Src) and for drawing destination (Dest)
             Vector2 frameSizeSrcVec = new Vector2(texture.Width, texture.Height) * textureFrameWidth;
@@ -543,7 +543,7 @@ namespace GeonBit.UI
         public virtual void StartDraw(SpriteBatch spriteBatch, bool isDisabled)
         {
             // start drawing
-            spriteBatch.Begin(SpriteSortMode.Deferred, UserInterface.Active.BlendState, UserInterface.Active.SamplerState,
+            spriteBatch.Begin(SpriteSortMode.Deferred, UserInterface.Instance.BlendState, UserInterface.Instance.SamplerState,
                 DepthStencilState.None, RasterizerState.CullCounterClockwise,
                 isDisabled ? Resources.disabledEffect : null);
 
@@ -558,7 +558,7 @@ namespace GeonBit.UI
         public virtual void StartDrawSilhouette(SpriteBatch spriteBatch)
         {
             // start drawing silhouette
-            spriteBatch.Begin(SpriteSortMode.Deferred, UserInterface.Active.BlendState, UserInterface.Active.SamplerState,
+            spriteBatch.Begin(SpriteSortMode.Deferred, UserInterface.Instance.BlendState, UserInterface.Instance.SamplerState,
                 DepthStencilState.None, RasterizerState.CullCounterClockwise, Resources.silhouetteEffect);
 
             // update drawing target
@@ -579,7 +579,7 @@ namespace GeonBit.UI
             }
             else
             {
-                newRenderTarget = UserInterface.Active.RenderTarget;
+                newRenderTarget = UserInterface.Instance.RenderTarget;
             }
 
             // only if changed, set render target (costly function)

@@ -1,5 +1,6 @@
 ﻿using GeonBit.UI;
 using GeonBit.UI.Entities;
+using GeonBit.UI.Enums;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 

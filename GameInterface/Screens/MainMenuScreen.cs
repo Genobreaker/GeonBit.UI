@@ -1,5 +1,6 @@
 ﻿using GeonBit.UI;
 using GeonBit.UI.Entities;
+using GeonBit.UI.Enums;
 using Microsoft.Xna.Framework;
 
 namespace GameInterface.Screens {
@@ -12,8 +13,8 @@ namespace GameInterface.Screens {
 
             Button onlineButton = new Button("Online Mode", ButtonSkin.Default, Anchor.Auto, new Vector2(0, 50), new Vector2(0));
             onlineButton.OnClick = (Entity btn) => {
-                UserInterface.Active.AddScreen(new OnlineModeScreen());
-                UserInterface.Active.SetCurrentScreen(typeof(OnlineModeScreen));
+                UserInterface.Instance.AddScreen(new OnlineModeScreen());
+                UserInterface.Instance.SetCurrentScreen(typeof(OnlineModeScreen));
             };
             Button aiButton = new Button("AI Mode", ButtonSkin.Default, Anchor.Auto, new Vector2(0, 50), new Vector2(0));
             Button replayButton = new Button("Replay Mode", ButtonSkin.Default, Anchor.Auto, new Vector2(0, 50), new Vector2(0));
@@ -21,7 +22,7 @@ namespace GameInterface.Screens {
             Button settingsButton = new Button("Settings", ButtonSkin.Default, Anchor.Auto, new Vector2(0, 50), new Vector2(0));
             Button exitButton = new Button("Exit", ButtonSkin.Default, Anchor.Auto, new Vector2(0, 50), new Vector2(0, 20));
             exitButton.OnClick = (Entity btn) => {
-                UserInterface.Active.Dispose();
+                UserInterface.Instance.Dispose();
             };
 
             menuPanel.AddChild(onlineButton);

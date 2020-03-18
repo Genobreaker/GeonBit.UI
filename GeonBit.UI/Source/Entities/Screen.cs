@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GeonBit.UI.Enums;
+using Microsoft.Xna.Framework;
 
 namespace GeonBit.UI.Entities {
 

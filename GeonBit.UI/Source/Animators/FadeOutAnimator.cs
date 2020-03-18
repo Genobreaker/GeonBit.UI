@@ -23,7 +23,7 @@ namespace GeonBit.UI.Animators
         public override void Update()
         {
             // update animation and calc new opacity
-            var dt = (float)UserInterface.Active.CurrGameTime.ElapsedGameTime.TotalSeconds;
+            var dt = (float)UserInterface.Instance.CurrGameTime.ElapsedGameTime.TotalSeconds;
             _timeLeft -= dt * SpeedFactor;
             var newOpacity = System.Math.Max(0f, _timeLeft);
 

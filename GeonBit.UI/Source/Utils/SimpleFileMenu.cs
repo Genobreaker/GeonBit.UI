@@ -6,6 +6,7 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
+using GeonBit.UI.Enums;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
@@ -101,14 +102,14 @@ namespace GeonBit.UI.Utils
         static public Entities.Panel Create(MenuLayout layout, Entities.PanelSkin skin = Entities.PanelSkin.Simple)
         {
             // create the root panel
-            var rootPanel = new Entities.Panel(new Vector2(0, Entities.DropDown.SelectedPanelHeight), skin, Entities.Anchor.TopLeft);
+            var rootPanel = new Entities.Panel(new Vector2(0, Entities.DropDown.SelectedPanelHeight), skin, Anchor.TopLeft);
             rootPanel.Padding = Vector2.Zero;
 
             // create menus
             foreach (var menu in layout.Layout)
             {
                 // create dropdown and all its items
-                var dropdown = new Entities.DropDown(new Vector2(menu.Width, -1), Entities.Anchor.AutoInline, null, Entities.PanelSkin.None, skin, false);
+                var dropdown = new Entities.DropDown(new Vector2(menu.Width, -1), Anchor.AutoInline, null, Entities.PanelSkin.None, skin, false);
                 rootPanel.AddChild(dropdown);
                 foreach (var item in menu.Items)
                 {

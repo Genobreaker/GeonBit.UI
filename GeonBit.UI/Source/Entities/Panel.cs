@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GeonBit.UI.DataTypes;
+using GeonBit.UI.Enums;
 
 namespace GeonBit.UI.Entities
 {
@@ -238,7 +239,7 @@ namespace GeonBit.UI.Entities
             spriteBatch.GraphicsDevice.Clear(Color.Transparent);
 
             // bind the render target
-            UserInterface.Active.DrawUtils.PushRenderTarget(_renderTarget);
+            UserInterface.Instance.DrawUtils.PushRenderTarget(_renderTarget);
 
             // set internal dest rect
             _originalInternalDestRect = _destRectInternal;
@@ -310,12 +311,12 @@ namespace GeonBit.UI.Entities
             if (_renderTarget != null)
             {
                 // unbind the render target
-                UserInterface.Active.DrawUtils.PopRenderTarget();
+                UserInterface.Instance.DrawUtils.PopRenderTarget();
                 
                 // draw the render target itself
-                UserInterface.Active.DrawUtils.StartDraw(spriteBatch, IsDisabled());
+                UserInterface.Instance.DrawUtils.StartDraw(spriteBatch, IsDisabled());
                 spriteBatch.Draw(_renderTarget, GetRenderTargetRect(), Color.White);
-                UserInterface.Active.DrawUtils.EndDraw(spriteBatch);
+                UserInterface.Instance.DrawUtils.EndDraw(spriteBatch);
 
                 // fix scrollbar positioning
                 if (_scrollbar != null)

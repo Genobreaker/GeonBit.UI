@@ -9,6 +9,7 @@
 // Since: 2016.
 //-----------------------------------------------------------------------------
 #endregion
+using GeonBit.UI.Enums;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -71,7 +72,7 @@ namespace GeonBit.UI.Entities
             Texture2D texture = Resources.horizontalLineTexture;
 
             // draw panel
-            UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, FRAME_WIDTH, 1, FillColor);
+            UserInterface.Instance.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, FRAME_WIDTH, 1, FillColor);
 
             // call base draw function
             base.DrawEntity(spriteBatch, phase);

@@ -19,9 +19,9 @@ namespace GameInterface {
         }
         
         protected override void Initialize() {
-            UserInterface.Initialize(Content);
-            UserInterface.Active.UseRenderTarget = true;
-            UserInterface.Active.IncludeCursorInRenderTarget = false;
+            UserInterface.Initialize();
+            UserInterface.Instance.UseRenderTarget = true;
+            UserInterface.Instance.IncludeCursorInRenderTarget = false;
             spriteBatch = new SpriteBatch(GraphicsDevice);
             
             int _ScreenWidth = graphics.GraphicsDevice.Adapter.CurrentDisplayMode.Width;
@@ -35,8 +35,8 @@ namespace GameInterface {
         }
        
         protected void InitExamplesAndUI() {
-            UserInterface.Active.AddScreen(new MainMenuScreen());
-            UserInterface.Active.SetCurrentScreen(typeof(MainMenuScreen));
+            UserInterface.Instance.AddScreen(new MainMenuScreen());
+            UserInterface.Instance.SetCurrentScreen(typeof(MainMenuScreen));
         }
 
         protected override void Update(GameTime gameTime) {
@@ -48,15 +48,15 @@ namespace GameInterface {
                 || Keyboard.GetState().IsKeyDown(Keys.Escape)) {
                 Exit();
             }
-            
-            UserInterface.Active.Update(gameTime);
+
+            UserInterface.Instance.Update(gameTime);
             base.Update(gameTime);
         }
         
         protected override void Draw(GameTime gameTime) {
-            UserInterface.Active.Draw(spriteBatch);
+            UserInterface.Instance.Draw(this.spriteBatch);
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            UserInterface.Active.DrawMainRenderTarget(spriteBatch);
+            UserInterface.Instance.DrawMainRenderTarget(this.spriteBatch);
             base.Draw(gameTime);
         }
 

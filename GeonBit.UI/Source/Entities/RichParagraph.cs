@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GeonBit.UI.DataTypes;
 using System.Text;
+using GeonBit.UI.Enums;
 
 namespace GeonBit.UI.Entities
 {
@@ -355,10 +356,10 @@ namespace GeonBit.UI.Entities
                 // function to reset styles back to defaults
                 System.Action ResetToDefaults = () =>
                 {
-                    currColor = UserInterface.Active.DrawUtils.FixColorOpacity(FillColor);
+                    currColor = UserInterface.Instance.DrawUtils.FixColorOpacity(FillColor);
                     currFont = _currFont;
                     currOutlineWidth = OutlineWidth;
-                    currOutlineColor = UserInterface.Active.DrawUtils.FixColorOpacity(OutlineColor);
+                    currOutlineColor = UserInterface.Instance.DrawUtils.FixColorOpacity(OutlineColor);
                     characterSize = GetCharacterActualSize();
                 };
                 ResetToDefaults();
@@ -378,7 +379,7 @@ namespace GeonBit.UI.Entities
                         // set fill color
                         if (styleInstruction.FillColor.HasValue)
                         {
-                            currColor = UserInterface.Active.DrawUtils.FixColorOpacity(styleInstruction.FillColor.Value);
+                            currColor = UserInterface.Instance.DrawUtils.FixColorOpacity(styleInstruction.FillColor.Value);
                         }
 
                         // set font style
@@ -396,7 +397,7 @@ namespace GeonBit.UI.Entities
                         // set outline color
                         if (styleInstruction.OutlineColor.HasValue)
                         {
-                            currOutlineColor = UserInterface.Active.DrawUtils.FixColorOpacity(styleInstruction.OutlineColor.Value);
+                            currOutlineColor = UserInterface.Instance.DrawUtils.FixColorOpacity(styleInstruction.OutlineColor.Value);
                         }
                     }
 

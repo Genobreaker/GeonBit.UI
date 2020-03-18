@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GeonBit.UI.DataTypes;
+using GeonBit.UI.Enums;
 
 namespace GeonBit.UI.Entities
 {
@@ -232,7 +233,7 @@ namespace GeonBit.UI.Entities
                 dest.X -= BackgroundSize / 2; dest.Y -= BackgroundSize / 2; dest.Width += BackgroundSize; dest.Height += BackgroundSize;
 
                 // draw background
-                UserInterface.Active.DrawUtils.DrawImage(spriteBatch, Resources.iconBackgroundTexture, dest, backColor);
+                UserInterface.Instance.DrawUtils.DrawImage(spriteBatch, Resources.iconBackgroundTexture, dest, backColor);
             }
 
             // now draw the image itself

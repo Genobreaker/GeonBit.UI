@@ -6,6 +6,7 @@
 // Since: 2017.
 //-----------------------------------------------------------------------------
 #endregion
+using GeonBit.UI.Enums;
 using Microsoft.Xna.Framework;
 
 
@@ -142,11 +143,11 @@ namespace GeonBit.UI.Utils
             Entities.ColoredRectangle fader = null;
             if (BackgroundFaderColor.A != 0)
             {
-                fader = new Entities.ColoredRectangle(Vector2.Zero, Entities.Anchor.Center);
+                fader = new Entities.ColoredRectangle(Vector2.Zero, Anchor.Center);
                 fader.FillColor = new Color(0, 0, 0, 100);
                 fader.OutlineWidth = 0;
                 fader.ClickThrough = false;
-                UserInterface.Active.Root.AddChild(fader);
+                UserInterface.Instance.Root.AddChild(fader);
                 ret.BackgroundFader = fader;
             }
 
@@ -161,7 +162,7 @@ namespace GeonBit.UI.Utils
 
             // add bottom buttons panel
             var buttonsPanel = new Entities.Panel(new Vector2(0, 70), 
-                Entities.PanelSkin.None, size.Value.Y == -1 ? Entities.Anchor.Auto : Entities.Anchor.BottomCenter);
+                Entities.PanelSkin.None, size.Value.Y == -1 ? Anchor.Auto : Anchor.BottomCenter);
             buttonsPanel.Padding = Vector2.Zero;
             panel.AddChild(buttonsPanel);
             buttonsPanel.PriorityBonus = -10;
@@ -171,7 +172,7 @@ namespace GeonBit.UI.Utils
             foreach (var option in options)
             {
                 // add button entity
-                var button = new Entities.Button(option.Title, anchor: Entities.Anchor.AutoInline, size: btnSize);
+                var button = new Entities.Button(option.Title, anchor: Anchor.AutoInline, size: btnSize);
 
                 // set click event
                 button.OnClick += (Entities.Entity ent) =>
@@ -203,7 +204,7 @@ namespace GeonBit.UI.Utils
             // add panel to active ui root
             else
             {
-                UserInterface.Active.Root.AddChild(panel);
+                UserInterface.Instance.Root.AddChild(panel);
             }
             return ret;
         }

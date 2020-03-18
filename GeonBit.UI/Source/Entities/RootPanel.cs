@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GeonBit.UI.Enums;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace GeonBit.UI.Entities {
@@ -30,8 +31,8 @@ namespace GeonBit.UI.Entities {
         #region Methods
 
         public override Rectangle CalcDestRect() {
-            int width = UserInterface.Active.ScreenWidth;
-            int height = UserInterface.Active.ScreenHeight;
+            int width = UserInterface.Instance.ScreenWidth;
+            int height = UserInterface.Instance.ScreenHeight;
             return new Rectangle(0, 0, width, height);
         }
 

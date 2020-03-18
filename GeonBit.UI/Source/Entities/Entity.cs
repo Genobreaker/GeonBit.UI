@@ -1,59 +1,15 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// Base UI entity. Every widget inherit from this class.
-// The base entity implement the following key functionality:
-// 1. Drawing basic stuff like tiled textures with frames etc.
-// 2. Positioning and calculating destination rect.
-// 3. Basic events.
-// 4. Visibility / Disabled / Locked modes.
-// 5. Managing child entities.
-//
-// Author: Ronen Ness.
-// Since: 2016.
-//-----------------------------------------------------------------------------
-#endregion
-using System.Reflection;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using GeonBit.UI.DataTypes;
+using GeonBit.UI.Enums;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using GeonBit.UI.DataTypes;
 
-namespace GeonBit.UI.Entities
-{
-    /// <summary>
-    /// GeonBit.UI.Entities contains all the UI elements you can create and use in your layouts.
-    /// </summary>
-    [System.Runtime.CompilerServices.CompilerGenerated]
-    class NamespaceDoc
-    {
-    }
-
-    /// <summary>
-    /// Different draw phases of the entity.
-    /// </summary>
-    public enum DrawPhase
-    {
-        /// <summary>
-        /// Drawing the entity itself.
-        /// </summary>
-        Base,
-
-        /// <summary>
-        /// Drawing entity outline.
-        /// </summary>
-        Outline,
-
-        /// <summary>
-        /// Drawing entity's shadow.
-        /// </summary>
-        Shadow,
-    }
+namespace GeonBit.UI.Entities {
 
     /// <summary>
     /// Static strings with all common style property names, to reduce string creations.
     /// </summary>
-    internal static class StylePropertyIds
-    {
+    internal static class StylePropertyIds {
         public static readonly string SpaceAfter = "SpaceAfter";
         public static readonly string SpaceBefore = "SpaceBefore";
         public static readonly string FillColor = "FillColor";
@@ -66,83 +22,17 @@ namespace GeonBit.UI.Entities
         public static readonly string OutlineWidth = "OutlineWidth";
         public static readonly string DefaultSize = "DefaultSize";
     }
-
-    /// <summary>
-    /// An Anchor is a pre-defined position in parent entity that we use to position a child.
-    /// For eample, we can use anchors to position an entity at the bottom-center point of its parent.
-    /// Note: anchor affect both the position relative to parent and also the offset origin point of the entity.
-    /// </summary>
-    public enum Anchor
-    {
-        /// <summary>Center of parent element.</summary>
-        Center,
-
-        /// <summary>Top-Left corner of parent element.</summary>
-        TopLeft,
-
-        /// <summary>Top-Right corner of parent element.</summary>
-        TopRight,
-
-        /// <summary>Top-Center of parent element.</summary>
-        TopCenter,
-
-        /// <summary>Bottom-Left corner of parent element.</summary>
-        BottomLeft,
-
-        /// <summary>Bottom-Right corner of parent element.</summary>
-        BottomRight,
-
-        /// <summary>Bottom-Center of parent element.</summary>
-        BottomCenter,
-
-        /// <summary>Center-Left of parent element.</summary>
-        CenterLeft,
-
-        /// <summary>Center-Right of parent element.</summary>
-        CenterRight,
-
-        /// <summary>Automatically position this entity below its older sibling.</summary>
-        Auto,
-
-        /// <summary>Automatically position this entity to the right side of its older sibling, and begin a new row whenever
-        /// exceeding the parent container width.</summary>
-        AutoInline,
-
-        /// <summary>Automatically position this entity to the right side of its older sibling, even if exceeding parent container width.</summary>
-        AutoInlineNoBreak,
-
-        /// <summary>Position of the older sibling bottom, eg align this entity based on its older sibling, but center on X axis.
-        /// Use this property to place entities one after another but keep them aligned to center (especially paragraphs).</summary>
-        AutoCenter,
-    };
-
-    /// <summary>
-    /// Possible entity states and interactions with user.
-    /// </summary>
-    public enum EntityState
-    {
-        /// <summary>Default state, eg currently not interacting.</summary>
-        Default = 0,
-
-        /// <summary>Mouse is hovering over this entity.</summary>
-        MouseHover = 1,
-
-        /// <summary>Mouse button is pressed down over this entity.</summary>
-        MouseDown = 2,
-    };
-
+    
     /// <summary>
     /// Basic UI entity.
     /// All entities inherit from this class and share this API.
     /// </summary>
     [System.Serializable]
-    public abstract class Entity
-    {
+    public abstract class Entity {
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static Entity()
-        {
+        static Entity() {
             Entity.MakeSerializable(typeof(Entity));
         }
 
@@ -154,10 +44,8 @@ namespace GeonBit.UI.Entities
         /// <summary>
         /// Get / set children list.
         /// </summary>
-        public IReadOnlyList<Entity> Children
-        {
-            get
-            {
+        public IReadOnlyList<Entity> Children {
+            get {
                 return _children.AsReadOnly() as IReadOnlyList<Entity>;
             }
         }
@@ -172,8 +60,7 @@ namespace GeonBit.UI.Entities
         /// Make an entity type serializable.
         /// </summary>
         /// <param name="type">Entity type to make serializable.</param>
-        public static void MakeSerializable(System.Type type)
-        {
+        public static void MakeSerializable(System.Type type) {
             _serializableTypes.Add(type);
         }
 
@@ -261,16 +148,23 @@ namespace GeonBit.UI.Entities
         /// <summary>
         /// Get / set raw stylesheet.
         /// </summary>
-        public StyleSheet RawStyleSheet
-        {
-            get { return _style; }
-            set { _style = value; }
+        public StyleSheet RawStyleSheet {
+            get {
+                return _style;
+            }
+            set {
+                _style = value;
+            }
         }
 
         /// <summary>
         /// Get overflow scrollbar value.
         /// </summary>
-        protected virtual Point OverflowScrollVal { get { return Point.Zero; } }
+        protected virtual Point OverflowScrollVal {
+            get {
+                return Point.Zero;
+            }
+        }
 
         // optional min size.
         private Vector2? _minSize;
@@ -283,14 +177,30 @@ namespace GeonBit.UI.Entities
         /// This is especially useful for entities with size that depends on their parent entity size, for example
         /// if you define an entity to take 20% of its parent space but can't be less than 200 pixels width.
         /// </summary>
-        public Vector2? MinSize { get { return _minSize; } set { _minSize = value;  MarkAsDirty(); } }
+        public Vector2? MinSize {
+            get {
+                return _minSize;
+            }
+            set {
+                _minSize = value;
+                MarkAsDirty();
+            }
+        }
 
         /// <summary>
         /// If defined, will limit the maximum size of this entity when calculating size.
         /// This is especially useful for entities with size that depends on their parent entity size, for example
         /// if you define an entity to take 20% of its parent space but can't be more than 200 pixels width.
         /// </summary>
-        public Vector2? MaxSize { get { return _maxSize; } set { _maxSize = value; MarkAsDirty(); } }
+        public Vector2? MaxSize {
+            get {
+                return _maxSize;
+            }
+            set {
+                _maxSize = value;
+                MarkAsDirty();
+            }
+        }
 
         /// <summary>
         /// Every time we update destination rect and internal destination rect view the update function, we increase this counter.
@@ -324,10 +234,13 @@ namespace GeonBit.UI.Entities
         /// <summary>
         /// Set / get offset.
         /// </summary>
-        public Vector2 Offset
-        {
-            get { return _offset; }
-            set { SetOffset(value); }
+        public Vector2 Offset {
+            get {
+                return _offset;
+            }
+            set {
+                SetOffset(value);
+            }
         }
 
         /// <summary>Anchor to position this entity based on (see Anchor enum for more info).</summary>
@@ -336,10 +249,13 @@ namespace GeonBit.UI.Entities
         /// <summary>
         /// Set / get anchor.
         /// </summary>
-        public Anchor Anchor
-        {
-            get { return _anchor; }
-            set { SetAnchor(value); }
+        public Anchor Anchor {
+            get {
+                return _anchor;
+            }
+            set {
+                SetAnchor(value);
+            }
         }
 
         /// <summary>Basic default style that all entities share. Note: loaded from UI theme xml file.</summary>
@@ -461,19 +377,15 @@ namespace GeonBit.UI.Entities
 
         /// <summary>Does this entity or one of its children currently focused?</summary>
         [System.Xml.Serialization.XmlIgnore]
-        public bool IsFocused
-        {
+        public bool IsFocused {
             // get if focused
-            get
-            {
+            get {
                 return _isFocused;
             }
 
             // set if focused
-            set
-            {
-                if (_isFocused != value)
-                {
+            set {
+                if (_isFocused != value) {
                     _isFocused = value;
                     DoOnFocusChange();
                 }
@@ -489,10 +401,8 @@ namespace GeonBit.UI.Entities
         /// <summary>
         /// Get internal destination rect.
         /// </summary>
-        public Rectangle InternalDestRect
-        {
-            get
-            {
+        public Rectangle InternalDestRect {
+            get {
                 return _destRectInternal;
             }
         }
@@ -518,8 +428,7 @@ namespace GeonBit.UI.Entities
         /// <param name="size">Entity size, in pixels.</param>
         /// <param name="anchor">Poisition anchor.</param>
         /// <param name="offset">Offset from anchor position.</param>
-        public Entity(Vector2? size = null, Anchor anchor = Anchor.Auto, Vector2? offset = null)
-        {
+        public Entity(Vector2? size = null, Anchor anchor = Anchor.Auto, Vector2? offset = null) {
             // set as dirty (eg need to recalculate destination rect)
             MarkAsDirty();
 
@@ -535,10 +444,8 @@ namespace GeonBit.UI.Entities
         /// <summary>
         /// Return the default size for this entity.
         /// </summary>
-        public Vector2 EntityDefaultSize
-        {
-            get
-            {
+        public Vector2 EntityDefaultSize {
+            get {
                 var ret = GetStyleProperty(StylePropertyIds.DefaultSize, EntityState.Default, true).asVector;
                 return ret;
             }
@@ -549,53 +456,57 @@ namespace GeonBit.UI.Entities
         /// </summary>
         /// <param name="addVector">Optional vector to add to cursor position.</param>
         /// <returns>Mouse position.</returns>
-        protected Vector2 GetMousePos(Vector2? addVector = null)
-        {
-            return UserInterface.Active.GetTransformedCursorPos(addVector);
+        protected Vector2 GetMousePos(Vector2? addVector = null) {
+            return UserInterface.Instance.GetTransformedCursorPos(addVector);
         }
 
         /// <summary>
         /// Get mouse input provider.
         /// </summary>
-        protected IMouseInput MouseInput
-        {
-            get { return UserInterface.Active.MouseInputProvider; }
+        protected IMouseInput MouseInput {
+            get {
+                return UserInterface.Instance.MouseInputProvider;
+            }
         }
 
         /// <summary>
         /// Get keyboard input provider.
         /// </summary>
-        protected IKeyboardInput KeyboardInput
-        {
-            get { return UserInterface.Active.KeyboardInputProvider; }
+        protected IKeyboardInput KeyboardInput {
+            get {
+                return UserInterface.Instance.KeyboardInputProvider;
+            }
         }
 
         /// <summary>
         /// Get the active user interface global scale.
         /// </summary>
-        protected float GlobalScale
-        {
-            get { return UserInterface.Active.GlobalScale; }
+        protected float GlobalScale {
+            get {
+                return UserInterface.Instance.GlobalScale;
+            }
         }
 
         /// <summary>
         /// If true, will add debug drawing to UI system to show offsets, margin, etc.
         /// </summary>
-        protected bool DebugDraw
-        {
-            get { return UserInterface.Active.DebugDraw; }
+        protected bool DebugDraw {
+            get {
+                return UserInterface.Instance.DebugDraw;
+            }
         }
 
         /// <summary>
         /// Call this function when the first update occures.
         /// </summary>
-        protected virtual void DoOnFirstUpdate()
-        {
+        protected virtual void DoOnFirstUpdate() {
             // call the spawn event
-            UserInterface.Active.OnEntitySpawn?.Invoke(this);
+            UserInterface.Instance.OnEntitySpawn?.Invoke(this);
 
             // make parent dirty
-            if (_parent != null) { _parent.MarkAsDirty(); }
+            if (_parent != null) {
+                _parent.MarkAsDirty();
+            }
         }
 
         /// <summary>
@@ -605,8 +516,7 @@ namespace GeonBit.UI.Entities
         /// <param name="state">State to get property for (if undefined will fallback to default state).</param>
         /// <param name="fallbackToDefault">If true and property not found for given state, will fallback to default state.</param>
         /// <returns>Style property value for given state or default, or null if undefined.</returns>
-        public StyleProperty GetStyleProperty(string property, EntityState state = EntityState.Default, bool fallbackToDefault = true)
-        {
+        public StyleProperty GetStyleProperty(string property, EntityState state = EntityState.Default, bool fallbackToDefault = true) {
             return _style.GetStyleProperty(property, state, fallbackToDefault);
         }
 
@@ -617,10 +527,11 @@ namespace GeonBit.UI.Entities
         /// <param name="value">Property value.</param>
         /// <param name="state">State to set property for.</param>
         /// <param name="markAsDirty">If true, will mark this entity as dirty after this style change.</param>
-        public void SetStyleProperty(string property, StyleProperty value, EntityState state = EntityState.Default, bool markAsDirty = true)
-        {
+        public void SetStyleProperty(string property, StyleProperty value, EntityState state = EntityState.Default, bool markAsDirty = true) {
             _style.SetStyleProperty(property, value, state);
-            if (markAsDirty) { MarkAsDirty(); }
+            if (markAsDirty) {
+                MarkAsDirty();
+            }
         }
 
         /// <summary>
@@ -628,8 +539,7 @@ namespace GeonBit.UI.Entities
         /// </summary>
         /// <param name="property">Property identifier.</param>
         /// <returns>Stylesheet property value for current entity state, or default if not defined.</returns>
-        public StyleProperty GetActiveStyle(string property)
-        {
+        public StyleProperty GetActiveStyle(string property) {
             return GetStyleProperty(property, _entityState);
         }
 
@@ -637,34 +547,47 @@ namespace GeonBit.UI.Entities
         /// Update the entire stylesheet from a different stylesheet.
         /// </summary>
         /// <param name="updates">Stylesheet to update from.</param>
-        public void UpdateStyle(StyleSheet updates)
-        {
+        public void UpdateStyle(StyleSheet updates) {
             _style.UpdateFrom(updates);
             MarkAsDirty();
         }
 
         /// <summary>Get extra space after with current UI scale applied. </summary>
-        protected Vector2 _scaledSpaceAfter { get { return SpaceAfter * GlobalScale; } }
+        protected Vector2 _scaledSpaceAfter {
+            get {
+                return SpaceAfter * GlobalScale;
+            }
+        }
 
         /// <summary>Get extra space before with current UI scale applied. </summary>
-        protected Vector2 _scaledSpaceBefore { get { return SpaceBefore * GlobalScale; } }
+        protected Vector2 _scaledSpaceBefore {
+            get {
+                return SpaceBefore * GlobalScale;
+            }
+        }
 
         /// <summary>Get size with current UI scale applied. Note: doesn't effect relative sizes with values from 0.0 to 1.0.</summary>
-        protected Vector2 _scaledSize
-        {
-            get
-            {
+        protected Vector2 _scaledSize {
+            get {
                 return new Vector2(
-                    _size.X < 1 ? _size.X : _size.X * GlobalScale, 
+                    _size.X < 1 ? _size.X : _size.X * GlobalScale,
                     _size.Y < 1 ? _size.Y : _size.Y * GlobalScale);
             }
         }
 
         /// <summary>Get offset with current UI scale applied. </summary>
-        protected Vector2 _scaledOffset { get { return _offset * GlobalScale; } }
+        protected Vector2 _scaledOffset {
+            get {
+                return _offset * GlobalScale;
+            }
+        }
 
         /// <summary>Get offset with current UI scale applied. </summary>
-        protected Vector2 _scaledPadding { get { return Padding * GlobalScale; } }
+        protected Vector2 _scaledPadding {
+            get {
+                return Padding * GlobalScale;
+            }
+        }
 
         /// <summary>
         /// Adds extra space outside the dest rect for collision detection.
@@ -676,46 +599,57 @@ namespace GeonBit.UI.Entities
         /// <summary>
         /// Set / get visibility.
         /// </summary>
-        public bool Visible
-        {
-            get { return _visible; }
-            set { _visible = value; DoOnVisibilityChange(); }
+        public bool Visible {
+            get {
+                return _visible;
+            }
+            set {
+                _visible = value;
+                DoOnVisibilityChange();
+            }
         }
 
         /// <summary>
         /// Return entity priority in drawing order and event handling.
         /// </summary>
-        protected virtual int Priority
-        {
-            get { return _indexInParent + PriorityBonus; }
+        protected virtual int Priority {
+            get {
+                return _indexInParent + PriorityBonus;
+            }
         }
 
         /// <summary>
         /// Get if this entity needs to recalculate destination rect.
         /// </summary>
-        protected bool IsDirty
-        {
-            get { return _isDirty; }
+        protected bool IsDirty {
+            get {
+                return _isDirty;
+            }
         }
 
         /// <summary>
         /// Is the entity draggable (eg can a user grab it and drag it around).
         /// </summary>
-        public bool Draggable
-        {
-            get { return _draggable; }
-            set { _needToSetDragOffset = _draggable != value; _draggable = value; MarkAsDirty(); }
+        public bool Draggable {
+            get {
+                return _draggable;
+            }
+            set {
+                _needToSetDragOffset = _draggable != value;
+                _draggable = value;
+                MarkAsDirty();
+            }
         }
 
         /// <summary>
         /// Optional background entity that will not respond to events and will always be rendered right behind this entity.
         /// </summary>
-        public Entity Background
-        {
-            get { return _background; }
+        public Entity Background {
+            get {
+                return _background;
+            }
             set {
-                if (value != null && value._parent != null)
-                {
+                if (value != null && value._parent != null) {
                     throw new Exceptions.InvalidStateException("Cannot set background entity that have a parent!");
                 }
                 _background = value;
@@ -726,10 +660,13 @@ namespace GeonBit.UI.Entities
         /// Current entity state (default / mouse hover / mouse down..).
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
-        public EntityState State
-        {
-            get { return _entityState; }
-            set { _entityState = value; }
+        public EntityState State {
+            get {
+                return _entityState;
+            }
+            set {
+                _entityState = value;
+            }
         }
 
         /// <summary>
@@ -739,33 +676,28 @@ namespace GeonBit.UI.Entities
         /// <param name="identifier">Identifier to find.</param>
         /// <param name="recursive">If true, will search recursively in children of children. If false, will search only in direct children.</param>
         /// <returns>First found entity with given identifier and type, or null if nothing found.</returns>
-        public T Find<T> (string identifier, bool recursive = false) where T : Entity
-        {
+        public T Find<T>(string identifier, bool recursive = false) where T : Entity {
             // should we return any entity type?
             bool anyType = typeof(T) == typeof(Entity);
 
             // iterate children
-            foreach (Entity child in _children)
-            {
+            foreach (Entity child in _children) {
                 // skip hidden entities
                 if (child._hiddenInternalEntity)
                     continue;
 
                 // check if identifier and type matches - if so, return it
-                if (child.Identifier == identifier && (anyType || (child.GetType() == typeof(T))))
-                {
+                if (child.Identifier == identifier && (anyType || (child.GetType() == typeof(T)))) {
                     return (T)child;
                 }
 
                 // if recursive, search in child
-                if (recursive)
-                {
+                if (recursive) {
                     // search in child
                     T ret = child.Find<T>(identifier, recursive);
 
                     // if found return it
-                    if (ret != null)
-                    {
+                    if (ret != null) {
                         return ret;
                     }
                 }
@@ -781,8 +713,7 @@ namespace GeonBit.UI.Entities
         /// <param name="identifier">Identifier to find.</param>
         /// <param name="recursive">If true, will search recursively in children of children. If false, will search only in direct children.</param>
         /// <returns>First found entity with given identifier, or null if nothing found.</returns>
-        public Entity Find(string identifier, bool recursive = false)
-        {
+        public Entity Find(string identifier, bool recursive = false) {
             return Find<Entity>(identifier, recursive);
         }
 
@@ -790,10 +721,8 @@ namespace GeonBit.UI.Entities
         /// Iterate over children and call 'callback' for every direct child of this entity.
         /// </summary>
         /// <param name="callback">Callback function to call with every child of this entity.</param>
-        public void IterateChildren(EventCallback callback)
-        {
-            foreach (Entity child in _children)
-            {
+        public void IterateChildren(EventCallback callback) {
+            foreach (Entity child in _children) {
                 callback(child);
             }
         }
@@ -801,50 +730,63 @@ namespace GeonBit.UI.Entities
         /// <summary>
         /// Entity current size property.
         /// </summary>
-        public Vector2 Size
-        {
-            get { return _size; }
-            set { if (_size != value) { _size = value; MarkAsDirty(); } }
+        public Vector2 Size {
+            get {
+                return _size;
+            }
+            set {
+                if (_size != value) {
+                    _size = value;
+                    MarkAsDirty();
+                }
+            }
         }
 
         /// <summary>
         /// Extra space (in pixels) to reserve *after* this entity when using Auto Anchors.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
-        public Vector2 SpaceAfter
-        {
-            set { SetStyleProperty(StylePropertyIds.SpaceAfter, new StyleProperty(value)); }
-            get { return GetActiveStyle(StylePropertyIds.SpaceAfter).asVector; }
+        public Vector2 SpaceAfter {
+            set {
+                SetStyleProperty(StylePropertyIds.SpaceAfter, new StyleProperty(value));
+            }
+            get {
+                return GetActiveStyle(StylePropertyIds.SpaceAfter).asVector;
+            }
         }
 
         /// <summary>
         /// Extra space (in pixels) to reserve *before* this entity when using Auto Anchors.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
-        public Vector2 SpaceBefore
-        {
-            set { SetStyleProperty(StylePropertyIds.SpaceBefore, new StyleProperty(value)); }
-            get { return GetActiveStyle(StylePropertyIds.SpaceBefore).asVector; }
+        public Vector2 SpaceBefore {
+            set {
+                SetStyleProperty(StylePropertyIds.SpaceBefore, new StyleProperty(value));
+            }
+            get {
+                return GetActiveStyle(StylePropertyIds.SpaceBefore).asVector;
+            }
         }
 
         /// <summary>
         /// Entity fill color - this is just a sugarcoat to access the default fill color style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
-        public Color FillColor
-        {
-            set { SetStyleProperty(StylePropertyIds.FillColor, new StyleProperty(value), markAsDirty: false); }
-            get { return GetActiveStyle(StylePropertyIds.FillColor).asColor; }
+        public Color FillColor {
+            set {
+                SetStyleProperty(StylePropertyIds.FillColor, new StyleProperty(value), markAsDirty: false);
+            }
+            get {
+                return GetActiveStyle(StylePropertyIds.FillColor).asColor;
+            }
         }
 
         /// <summary>
         /// Entity fill color opacity - this is just a sugarcoat to access the default fill color alpha style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
-        public virtual byte Opacity
-        {
-            set
-            {
+        public virtual byte Opacity {
+            set {
                 // update fill color
                 Color col = FillColor;
                 col.A = value;
@@ -855,8 +797,7 @@ namespace GeonBit.UI.Entities
                 col.A = value;
                 SetStyleProperty(StylePropertyIds.OutlineColor, new StyleProperty(col), markAsDirty: false);
             }
-            get
-            {
+            get {
                 return FillColor.A;
             }
         }
@@ -865,16 +806,13 @@ namespace GeonBit.UI.Entities
         /// Entity outline color opacity - this is just a sugarcoat to access the default outline color alpha style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
-        public byte OutlineOpacity
-        {
-            set
-            {
+        public byte OutlineOpacity {
+            set {
                 Color col = OutlineColor;
                 col.A = value;
                 SetStyleProperty(StylePropertyIds.OutlineColor, new StyleProperty(col), markAsDirty: false);
             }
-            get
-            {
+            get {
                 return OutlineColor.A;
             }
         }
@@ -883,83 +821,104 @@ namespace GeonBit.UI.Entities
         /// Entity padding - this is just a sugarcoat to access the default padding style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
-        public Vector2 Padding
-        {
-            set { SetStyleProperty(StylePropertyIds.Padding, new StyleProperty(value)); }
-            get { return GetActiveStyle(StylePropertyIds.Padding).asVector; }
+        public Vector2 Padding {
+            set {
+                SetStyleProperty(StylePropertyIds.Padding, new StyleProperty(value));
+            }
+            get {
+                return GetActiveStyle(StylePropertyIds.Padding).asVector;
+            }
         }
 
         /// <summary>
         /// Entity shadow color - this is just a sugarcoat to access the default shadow color style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
-        public Color ShadowColor
-        {
-            set { SetStyleProperty(StylePropertyIds.ShadowColor, new StyleProperty(value), markAsDirty: false); }
-            get { return GetActiveStyle(StylePropertyIds.ShadowColor).asColor; }
+        public Color ShadowColor {
+            set {
+                SetStyleProperty(StylePropertyIds.ShadowColor, new StyleProperty(value), markAsDirty: false);
+            }
+            get {
+                return GetActiveStyle(StylePropertyIds.ShadowColor).asColor;
+            }
         }
 
         /// <summary>
         /// Entity shadow scale - this is just a sugarcoat to access the default shadow scale style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
-        public float ShadowScale
-        {
-            set { SetStyleProperty(StylePropertyIds.ShadowScale, new StyleProperty(value), markAsDirty: false); }
-            get { return GetActiveStyle(StylePropertyIds.ShadowScale).asFloat; }
+        public float ShadowScale {
+            set {
+                SetStyleProperty(StylePropertyIds.ShadowScale, new StyleProperty(value), markAsDirty: false);
+            }
+            get {
+                return GetActiveStyle(StylePropertyIds.ShadowScale).asFloat;
+            }
         }
 
         /// <summary>
         /// Entity shadow offset - this is just a sugarcoat to access the default shadow offset style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
-        public Vector2 ShadowOffset
-        {
-            set { SetStyleProperty(StylePropertyIds.ShadowOffset, new StyleProperty(value), markAsDirty: false); }
-            get { return GetActiveStyle(StylePropertyIds.ShadowOffset).asVector; }
+        public Vector2 ShadowOffset {
+            set {
+                SetStyleProperty(StylePropertyIds.ShadowOffset, new StyleProperty(value), markAsDirty: false);
+            }
+            get {
+                return GetActiveStyle(StylePropertyIds.ShadowOffset).asVector;
+            }
         }
 
         /// <summary>
         /// Entity scale - this is just a sugarcoat to access the default scale style property.
         /// </summary>
-        public float Scale
-        {
-            set { SetStyleProperty(StylePropertyIds.Scale, new StyleProperty(value)); }
-            get { return GetActiveStyle(StylePropertyIds.Scale).asFloat; }
+        public float Scale {
+            set {
+                SetStyleProperty(StylePropertyIds.Scale, new StyleProperty(value));
+            }
+            get {
+                return GetActiveStyle(StylePropertyIds.Scale).asFloat;
+            }
         }
 
         /// <summary>
         /// Entity outline color - this is just a sugarcoat to access the default outline color style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
-        public Color OutlineColor
-        {
-            set { SetStyleProperty(StylePropertyIds.OutlineColor, new StyleProperty(value), markAsDirty: false); }
-            get { return GetActiveStyle(StylePropertyIds.OutlineColor).asColor; }
+        public Color OutlineColor {
+            set {
+                SetStyleProperty(StylePropertyIds.OutlineColor, new StyleProperty(value), markAsDirty: false);
+            }
+            get {
+                return GetActiveStyle(StylePropertyIds.OutlineColor).asColor;
+            }
         }
 
         /// <summary>
         /// Entity outline width - this is just a sugarcoat to access the default outline color style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
-        public int OutlineWidth
-        {
-            set { SetStyleProperty(StylePropertyIds.OutlineWidth, new StyleProperty(value), markAsDirty: false); }
-            get { return GetActiveStyle(StylePropertyIds.OutlineWidth).asInt; }
+        public int OutlineWidth {
+            set {
+                SetStyleProperty(StylePropertyIds.OutlineWidth, new StyleProperty(value), markAsDirty: false);
+            }
+            get {
+                return GetActiveStyle(StylePropertyIds.OutlineWidth).asInt;
+            }
         }
 
         /// <summary>
         /// Return if this entity is currently disabled, due to self or one of the parents / grandparents being disabled.
         /// </summary>
         /// <returns>True if entity is disabled.</returns>
-        public bool IsDisabled()
-        {
+        public bool IsDisabled() {
             // iterate over parents until root, starting with self.
             // if any entity along the way is disabled we return true.
             Entity parent = this;
-            while (parent != null)
-            {
-                if (!parent.Enabled) { return true; }
+            while (parent != null) {
+                if (!parent.Enabled) {
+                    return true;
+                }
                 parent = parent._parent;
             }
 
@@ -974,14 +933,14 @@ namespace GeonBit.UI.Entities
         /// </summary>
         /// <param name="other">Entity to check if this entity is descendant of.</param>
         /// <returns>True if this entity is descendant of the other entity.</returns>
-        public bool IsDeepChildOf(Entity other)
-        {
+        public bool IsDeepChildOf(Entity other) {
             // iterate over parents until root, starting with self.
             // if any entity along the way is child of 'other', we return true.
             Entity parent = this;
-            while (parent != null)
-            {
-                if (parent._parent == other) { return true; }
+            while (parent != null) {
+                if (parent._parent == other) {
+                    return true;
+                }
                 parent = parent._parent;
             }
 
@@ -993,18 +952,14 @@ namespace GeonBit.UI.Entities
         /// Return if this entity is currently locked, due to self or one of the parents / grandparents being locked.
         /// </summary>
         /// <returns>True if entity is disabled.</returns>
-        public bool IsLocked()
-        {
+        public bool IsLocked() {
             // iterate over parents until root, starting with self.
             // if any entity along the way is locked we return true.
             Entity parent = this;
-            while (parent != null)
-            {
-                if (parent.Locked)
-                {
+            while (parent != null) {
+                if (parent.Locked) {
                     // special case - if should do events even when parent is locked and direct parent, skip
-                    if (DoEventsIfDirectParentIsLocked)
-                    {
+                    if (DoEventsIfDirectParentIsLocked) {
                         if (parent == _parent) {
                             parent = parent._parent;
                             continue;
@@ -1027,14 +982,14 @@ namespace GeonBit.UI.Entities
         /// Return if this entity is currently visible, eg this and all its parents and grandparents are visible.
         /// </summary>
         /// <returns>True if entity is really visible.</returns>
-        public bool IsVisible()
-        {
+        public bool IsVisible() {
             // iterate over parents until root, starting with self.
             // if any entity along the way is not visible we return false.
             Entity parent = this;
-            while (parent != null)
-            {
-                if (!parent.Visible) { return false; }
+            while (parent != null) {
+                if (!parent.Visible) {
+                    return false;
+                }
                 parent = parent._parent;
             }
 
@@ -1047,8 +1002,7 @@ namespace GeonBit.UI.Entities
         /// </summary>
         /// <param name="anchor">New anchor to set.</param>
         /// <param name="offset">Offset from new anchor position.</param>
-        public void SetAnchorAndOffset(Anchor anchor, Vector2 offset)
-        {
+        public void SetAnchorAndOffset(Anchor anchor, Vector2 offset) {
             SetAnchor(anchor);
             SetOffset(offset);
         }
@@ -1057,8 +1011,7 @@ namespace GeonBit.UI.Entities
         /// Set the anchor of this entity.
         /// </summary>
         /// <param name="anchor">New anchor to set.</param>
-        private void SetAnchor(Anchor anchor)
-        {
+        private void SetAnchor(Anchor anchor) {
             _anchor = anchor;
             MarkAsDirty();
         }
@@ -1067,10 +1020,8 @@ namespace GeonBit.UI.Entities
         /// Set the offset of this entity.
         /// </summary>
         /// <param name="offset">New offset to set.</param>
-        private void SetOffset(Vector2 offset)
-        {
-            if (_offset != offset || _dragOffset != offset)
-            {
+        private void SetOffset(Vector2 offset) {
+            if (_offset != offset || _dragOffset != offset) {
                 _dragOffset = _offset = offset;
                 MarkAsDirty();
             }
@@ -1080,11 +1031,9 @@ namespace GeonBit.UI.Entities
         /// Return children in a sorted list by priority.
         /// </summary>
         /// <returns>List of children sorted by priority.</returns>
-        protected List<Entity> GetSortedChildren()
-        {
+        protected List<Entity> GetSortedChildren() {
             // if need to sort children, rebuild the sorted list
-            if (_needToSortChildren)
-            {
+            if (_needToSortChildren) {
                 // create list to sort and return
                 _sortedChildren = new List<Entity>(_children);
 
@@ -1104,8 +1053,7 @@ namespace GeonBit.UI.Entities
         /// Update dest rect and internal dest rect.
         /// This is called internally whenever a change is made to the entity or its parent.
         /// </summary>
-        virtual internal protected void UpdateDestinationRects()
-        {
+        virtual internal protected void UpdateDestinationRects() {
             // update dest and internal dest rects
             _destRect = CalcDestRect();
             _destRectInternal = CalcInternalRect();
@@ -1115,17 +1063,17 @@ namespace GeonBit.UI.Entities
 
             // increase dest rect version and update parent last known
             _destRectVersion++;
-            if (_parent != null) { _parentLastDestRectVersion = _parent._destRectVersion; }
+            if (_parent != null) {
+                _parentLastDestRectVersion = _parent._destRectVersion;
+            }
         }
 
         /// <summary>
         /// Update dest rect and internal dest rect, but only if needed (eg if something changed since last update).
         /// </summary>
-        virtual internal protected void UpdateDestinationRectsIfDirty()
-        {
+        virtual internal protected void UpdateDestinationRectsIfDirty() {
             // if dirty, update destination rectangles
-            if (_parent != null && (_isDirty || (_parentLastDestRectVersion != _parent._destRectVersion)))
-            {
+            if (_parent != null && (_isDirty || (_parentLastDestRectVersion != _parent._destRectVersion))) {
                 UpdateDestinationRects();
             }
         }
@@ -1134,11 +1082,9 @@ namespace GeonBit.UI.Entities
         /// Draw this entity and its children.
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to use for drawing.</param>
-        virtual public void Draw(SpriteBatch spriteBatch)
-        {
+        virtual public void Draw(SpriteBatch spriteBatch) {
             // if not visible skip
-            if (!Visible)
-            {
+            if (!Visible) {
                 return;
             }
 
@@ -1149,8 +1095,7 @@ namespace GeonBit.UI.Entities
             OnBeforeDraw(spriteBatch);
 
             // draw background
-            if (Background != null)
-            {
+            if (Background != null) {
                 _background._parent = this;
                 _background._indexInParent = 0;
                 _background.Draw(spriteBatch);
@@ -1167,13 +1112,12 @@ namespace GeonBit.UI.Entities
             DrawEntityOutline(spriteBatch);
 
             // draw the entity itself
-            UserInterface.Active.DrawUtils.StartDraw(spriteBatch, _isCurrentlyDisabled);
+            UserInterface.Instance.DrawUtils.StartDraw(spriteBatch, _isCurrentlyDisabled);
             DrawEntity(spriteBatch, DrawPhase.Base);
-            UserInterface.Active.DrawUtils.EndDraw(spriteBatch);
+            UserInterface.Instance.DrawUtils.EndDraw(spriteBatch);
 
             // do debug drawing
-            if (DebugDraw)
-            {
+            if (DebugDraw) {
                 DrawDebugStuff(spriteBatch);
             }
 
@@ -1188,8 +1132,7 @@ namespace GeonBit.UI.Entities
         /// Draw debug stuff for this entity.
         /// </summary>
         /// <param name="spriteBatch">Spritebatch to use for drawing.</param>
-        protected virtual void DrawDebugStuff(SpriteBatch spriteBatch)
-        {
+        protected virtual void DrawDebugStuff(SpriteBatch spriteBatch) {
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
 
             // first draw whole dest rect
@@ -1202,26 +1145,22 @@ namespace GeonBit.UI.Entities
 
             // draw space before
             var spaceColor = new Color(0f, 0f, 0.5f, 0.5f);
-            if (SpaceBefore.X > 0)
-            {
+            if (SpaceBefore.X > 0) {
                 spriteBatch.Draw(Resources.whiteTexture,
                     new Rectangle((int)(_destRect.Left - _scaledSpaceBefore.X), _destRect.Y, (int)_scaledSpaceBefore.X, _destRect.Height), spaceColor);
             }
-            if (SpaceBefore.Y > 0)
-            {
+            if (SpaceBefore.Y > 0) {
                 spriteBatch.Draw(Resources.whiteTexture,
                     new Rectangle(_destRect.X, (int)(_destRect.Top - _scaledSpaceBefore.Y), _destRect.Width, (int)_scaledSpaceBefore.Y), spaceColor);
             }
 
             // draw space after
             spaceColor = new Color(0.5f, 0f, 0.5f, 0.5f);
-            if (SpaceAfter.X > 0)
-            {
+            if (SpaceAfter.X > 0) {
                 spriteBatch.Draw(Resources.whiteTexture,
                     new Rectangle(_destRect.Right, _destRect.Y, (int)_scaledSpaceAfter.X, _destRect.Height), spaceColor);
             }
-            if (SpaceAfter.Y > 0)
-            {
+            if (SpaceAfter.Y > 0) {
                 spriteBatch.Draw(Resources.whiteTexture,
                     new Rectangle(_destRect.X, _destRect.Bottom, _destRect.Width, (int)_scaledSpaceAfter.Y), spaceColor);
             }
@@ -1233,8 +1172,7 @@ namespace GeonBit.UI.Entities
         /// Draw all children.
         /// </summary>
         /// <param name="spriteBatch"></param>
-        protected virtual void DrawChildren(SpriteBatch spriteBatch)
-        {
+        protected virtual void DrawChildren(SpriteBatch spriteBatch) {
             // do stuff before drawing children
             BeforeDrawChildren(spriteBatch);
 
@@ -1242,8 +1180,7 @@ namespace GeonBit.UI.Entities
             List<Entity> childrenSorted = GetSortedChildren();
 
             // draw all children
-            foreach (Entity child in childrenSorted)
-            {
+            foreach (Entity child in childrenSorted) {
                 child.Draw(spriteBatch);
             }
 
@@ -1254,13 +1191,11 @@ namespace GeonBit.UI.Entities
         /// <summary>
         /// Special init after deserializing entity from file.
         /// </summary>
-        internal protected virtual void InitAfterDeserialize()
-        {
+        internal protected virtual void InitAfterDeserialize() {
             // fix children parent
             var temp = _children;
             _children = new List<Entity>();
-            foreach (var child in temp)
-            {
+            foreach (var child in temp) {
                 child._parent = null;
                 AddChild(child, child.InheritParentState);
             }
@@ -1269,8 +1204,7 @@ namespace GeonBit.UI.Entities
             MarkAsDirty();
 
             // update all children
-            foreach (var child in _children)
-            {
+            foreach (var child in _children) {
                 child.InitAfterDeserialize();
             }
         }
@@ -1281,8 +1215,7 @@ namespace GeonBit.UI.Entities
         /// Note: if multiple entities share the same identifier, the deepest entity in hirarchy will end up in dict.
         /// </summary>
         /// <returns>Dictionary with entities by their identifiers.</returns>
-        public Dictionary<string, Entity> ToEntitiesDictionary()
-        {
+        public Dictionary<string, Entity> ToEntitiesDictionary() {
             Dictionary<string, Entity> ret = new Dictionary<string, Entity>();
             PopulateDict(ref ret);
             return ret;
@@ -1293,15 +1226,13 @@ namespace GeonBit.UI.Entities
         /// Note: if multiple entities share the same identifier, the deepest entity in hirarchy will end up in dict.
         /// </summary>
         /// <param name="dict">Dictionary to put entities into.</param>
-        private void PopulateDict(ref Dictionary<string, Entity> dict)
-        {
+        private void PopulateDict(ref Dictionary<string, Entity> dict) {
             // add self if got identifier
             if (Identifier != null && Identifier.Length > 0)
                 dict[Identifier] = this;
 
             // iterate children
-            foreach(var child in _children)
-            {
+            foreach (var child in _children) {
                 child.PopulateDict(ref dict);
             }
         }
@@ -1310,30 +1241,29 @@ namespace GeonBit.UI.Entities
         /// Called before drawing child entities of this entity.
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch used to draw entities.</param>
-        protected virtual void BeforeDrawChildren(SpriteBatch spriteBatch)
-        {
+        protected virtual void BeforeDrawChildren(SpriteBatch spriteBatch) {
         }
 
         /// <summary>
         /// Called after drawing child entities of this entity.
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch used to draw entities.</param>
-        protected virtual void AfterDrawChildren(SpriteBatch spriteBatch)
-        {
+        protected virtual void AfterDrawChildren(SpriteBatch spriteBatch) {
         }
 
         /// <summary>
         /// Draw entity shadow (if defined shadow).
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
-        virtual protected void DrawEntityShadow(SpriteBatch spriteBatch)
-        {
+        virtual protected void DrawEntityShadow(SpriteBatch spriteBatch) {
             // store current 'is-dirty' flag, because it changes internally while drawing shadow
             bool isDirty = _isDirty;
 
             // get current shadow color and if transparent skip
             Color shadowColor = ShadowColor;
-            if (shadowColor.A == 0) { return; }
+            if (shadowColor.A == 0) {
+                return;
+            }
 
             // get shadow scale
             float shadowScale = ShadowScale;
@@ -1357,15 +1287,14 @@ namespace GeonBit.UI.Entities
             _entityState = EntityState.Default;
 
             // if disabled, turn color into greyscale
-            if (_isCurrentlyDisabled)
-            {
+            if (_isCurrentlyDisabled) {
                 FillColor = new Color(Color.White * (((shadowColor.R + shadowColor.G + shadowColor.B) / 3f) / 255f), shadowColor.A);
             }
 
             // draw with shadow effect
-            UserInterface.Active.DrawUtils.StartDrawSilhouette(spriteBatch);
+            UserInterface.Instance.DrawUtils.StartDrawSilhouette(spriteBatch);
             DrawEntity(spriteBatch, DrawPhase.Shadow);
-            UserInterface.Active.DrawUtils.EndDraw(spriteBatch);
+            UserInterface.Instance.DrawUtils.EndDraw(spriteBatch);
 
             // return position and colors back to what they were
             _destRect.X -= (int)ShadowOffset.X;
@@ -1384,18 +1313,18 @@ namespace GeonBit.UI.Entities
         /// Draw entity outline.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
-        virtual protected void DrawEntityOutline(SpriteBatch spriteBatch)
-        {
+        virtual protected void DrawEntityOutline(SpriteBatch spriteBatch) {
             // get outline width and if 0 return
             int outlineWidth = OutlineWidth;
-            if (OutlineWidth == 0) { return; }
+            if (OutlineWidth == 0) {
+                return;
+            }
 
             // get outline color
             Color outlineColor = OutlineColor;
 
             // if disabled, turn outline to grey
-            if (_isCurrentlyDisabled)
-            {
+            if (_isCurrentlyDisabled) {
                 outlineColor = new Color(Color.White * (((outlineColor.R + outlineColor.G + outlineColor.B) / 3f) / 255f), outlineColor.A);
             }
 
@@ -1413,7 +1342,7 @@ namespace GeonBit.UI.Entities
             SetStyleProperty(StylePropertyIds.FillColor, new StyleProperty(outlineColor), oldState, markAsDirty: false);
 
             // draw the entity outline
-            UserInterface.Active.DrawUtils.StartDrawSilhouette(spriteBatch);
+            UserInterface.Instance.DrawUtils.StartDrawSilhouette(spriteBatch);
             _destRect.Location = originalDest.Location + new Point(-outlineWidth, 0);
             DrawEntity(spriteBatch, DrawPhase.Outline);
             _destRect.Location = originalDest.Location + new Point(0, -outlineWidth);
@@ -1422,7 +1351,7 @@ namespace GeonBit.UI.Entities
             DrawEntity(spriteBatch, DrawPhase.Outline);
             _destRect.Location = originalDest.Location + new Point(0, outlineWidth);
             DrawEntity(spriteBatch, DrawPhase.Outline);
-            UserInterface.Active.DrawUtils.EndDraw(spriteBatch);
+            UserInterface.Instance.DrawUtils.EndDraw(spriteBatch);
 
             // turn back to previous fill color
             SetStyleProperty(StylePropertyIds.FillColor, new StyleProperty(oldFill), oldState, markAsDirty: false);
@@ -1438,36 +1367,34 @@ namespace GeonBit.UI.Entities
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        virtual protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
-        {
+        virtual protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase) {
         }
 
         /// <summary>
         /// Called every frame after drawing is done.
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to draw on.</param>
-        virtual protected void OnAfterDraw(SpriteBatch spriteBatch)
-        {
+        virtual protected void OnAfterDraw(SpriteBatch spriteBatch) {
             AfterDraw?.Invoke(this);
-            UserInterface.Active.AfterDraw?.Invoke(this);
+            UserInterface.Instance.AfterDraw?.Invoke(this);
         }
 
         /// <summary>
         /// Called every frame before drawing is done.
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to draw on.</param>
-        virtual protected void OnBeforeDraw(SpriteBatch spriteBatch)
-        {
+        virtual protected void OnBeforeDraw(SpriteBatch spriteBatch) {
             BeforeDraw?.Invoke(this);
-            UserInterface.Active.BeforeDraw?.Invoke(this);
+            UserInterface.Instance.BeforeDraw?.Invoke(this);
         }
 
         /// <summary>
         /// Get the direct parent of this entity.
         /// </summary>
-        public Entity Parent
-        {
-            get { return _parent; }
+        public Entity Parent {
+            get {
+                return _parent;
+            }
         }
 
         /// <summary>
@@ -1477,12 +1404,11 @@ namespace GeonBit.UI.Entities
         /// <param name="inheritParentState">If true, this entity will inherit the parent's state (set InheritParentState property).</param>
         /// <param name="index">If provided, will be the index in the children array to push the new entity.</param>
         /// <returns>The newly added entity.</returns>
-        public Entity AddChild(Entity child, bool inheritParentState = false, int index = -1)
-        {
+        public Entity AddChild(Entity child, bool inheritParentState = false, int index = -1) {
             // make sure don't already have a parent
-            if (child._parent != null)
-            {
-                if (UserInterface.Active.SilentSoftErrors) return child;
+            if (child._parent != null) {
+                if (UserInterface.Instance.SilentSoftErrors)
+                    return child;
                 throw new Exceptions.InvalidStateException("Child element to add already got a parent!");
             }
 
@@ -1496,18 +1422,16 @@ namespace GeonBit.UI.Entities
             child._parent = this;
 
             // if index is -1 or out of range, set to last item in childrens list
-            if (index == -1 || index >= _children.Count)
-            {
+            if (index == -1 || index >= _children.Count) {
                 index = _children.Count;
             }
-            
+
             // add child at index
             child._indexInParent = index;
             _children.Insert(index, child);
 
             // update any siblings which need their index updating
-            for (int i = index + 1; i < _children.Count; i++)
-            {
+            for (int i = index + 1; i < _children.Count; i++) {
                 _children[i]._indexInParent += 1;
             }
 
@@ -1523,8 +1447,7 @@ namespace GeonBit.UI.Entities
         /// <summary>
         /// Bring this entity to be on front (inside its parent).
         /// </summary>
-        public void BringToFront()
-        {
+        public void BringToFront() {
             Entity parent = _parent;
             parent.RemoveChild(this);
             parent.AddChild(this, InheritParentState);
@@ -1533,8 +1456,7 @@ namespace GeonBit.UI.Entities
         /// <summary>
         /// Push this entity to the back (inside its parent).
         /// </summary>
-        public void SendToBack()
-        {
+        public void SendToBack() {
             Entity parent = _parent;
             parent.RemoveChild(this);
             parent.AddChild(this, InheritParentState, 0);
@@ -1544,12 +1466,11 @@ namespace GeonBit.UI.Entities
         /// Remove child entity.
         /// </summary>
         /// <param name="child">Entity to remove.</param>
-        public void RemoveChild(Entity child)
-        {
+        public void RemoveChild(Entity child) {
             // make sure don't already have a parent
-            if (child._parent != this)
-            {
-                if (UserInterface.Active.SilentSoftErrors) return;
+            if (child._parent != this) {
+                if (UserInterface.Instance.SilentSoftErrors)
+                    return;
                 throw new Exceptions.InvalidStateException("Child element to remove does not belong to this entity!");
             }
 
@@ -1563,8 +1484,7 @@ namespace GeonBit.UI.Entities
 
             // reset index for all children
             int index = 0;
-            foreach (Entity itrChild in _children)
-            {
+            foreach (Entity itrChild in _children) {
                 itrChild._indexInParent = index++;
             }
 
@@ -1576,11 +1496,9 @@ namespace GeonBit.UI.Entities
         /// <summary>
         /// Remove all children entities.
         /// </summary>
-        public void ClearChildren()
-        {
+        public void ClearChildren() {
             // remove all children
-            foreach (Entity child in _children)
-            {
+            foreach (Entity child in _children) {
                 child._parent = null;
                 child._indexInParent = -1;
                 child.MarkAsDirty();
@@ -1596,8 +1514,7 @@ namespace GeonBit.UI.Entities
         /// Calculate and return the internal destination rectangle (note: this relay on the dest rect having a valid value first).
         /// </summary>
         /// <returns>Internal destination rectangle.</returns>
-        virtual internal protected Rectangle CalcInternalRect()
-        {
+        virtual internal protected Rectangle CalcInternalRect() {
             // calculate the internal destination rect, eg after padding
             Vector2 padding = _scaledPadding;
             _destRectInternal = GetActualDestRect();
@@ -1612,8 +1529,7 @@ namespace GeonBit.UI.Entities
         /// Add animator to this entity.
         /// </summary>
         /// <param name="animator">Animator to attach.</param>
-        public Animators.IAnimator AttachAnimator(Animators.IAnimator animator)
-        {
+        public Animators.IAnimator AttachAnimator(Animators.IAnimator animator) {
             animator.SetTargetEntity(this);
             _animators.Add(animator);
             return animator;
@@ -1623,10 +1539,8 @@ namespace GeonBit.UI.Entities
         /// Remove animator from entity.
         /// </summary>
         /// <param name="animator">Animator to remove.</param>
-        public void RemoveAnimator(Animators.IAnimator animator)
-        {
-            if (_animators.Remove(animator))
-            {
+        public void RemoveAnimator(Animators.IAnimator animator) {
+            if (_animators.Remove(animator)) {
                 animator.SetTargetEntity(null);
             }
         }
@@ -1638,18 +1552,15 @@ namespace GeonBit.UI.Entities
         /// </summary>
         /// <param name="size">Size to calculate.</param>
         /// <returns>Actual size in pixels.</returns>
-        protected virtual Point CalcActualSizeInPixels(Vector2 size)
-        {
+        protected virtual Point CalcActualSizeInPixels(Vector2 size) {
             // simple case: if size is not in percents, just return as-is
-            if (size.X > 1f && size.Y > 1f)
-            {
+            if (size.X > 1f && size.Y > 1f) {
                 return size.ToPoint();
             }
 
             // get parent internal destination rectangle
-            var parentDest = UserInterface.Active.Root._destRect;
-            if (_parent != null)
-            {
+            var parentDest = UserInterface.Instance.Root._destRect;
+            if (_parent != null) {
                 _parent.UpdateDestinationRectsIfDirty();
                 parentDest = _parent._destRectInternal;
             }
@@ -1664,25 +1575,26 @@ namespace GeonBit.UI.Entities
         /// Calculate and return the destination rectangle, eg the space this entity is rendered on.
         /// </summary>
         /// <returns>Destination rectangle.</returns>
-        virtual public Rectangle CalcDestRect()
-        {
+        virtual public Rectangle CalcDestRect() {
             // create new rectangle
             Rectangle ret = new Rectangle();
 
             // no parent? assume active interface root as parent
             var parent = _parent;
-            if (parent == null)
-            {
-                parent = UserInterface.Active.Root;
+            if (parent == null) {
+                parent = UserInterface.Instance.Root;
             }
 
             // set default size
             var originSize = _size;
-            if (_size.X == -1 || _size.Y == -1)
-            {
+            if (_size.X == -1 || _size.Y == -1) {
                 Vector2 defaultSize = EntityDefaultSize;
-                if (_size.X == -1) { _size.X = defaultSize.X; }
-                if (_size.Y == -1) { _size.Y = defaultSize.Y; }
+                if (_size.X == -1) {
+                    _size.X = defaultSize.X;
+                }
+                if (_size.Y == -1) {
+                    _size.Y = defaultSize.Y;
+                }
             }
 
             // get parent internal destination rectangle
@@ -1698,15 +1610,13 @@ namespace GeonBit.UI.Entities
             _size = originSize;
 
             // apply min size
-            if (MinSize != null)
-            {
+            if (MinSize != null) {
                 Point minInPixels = CalcActualSizeInPixels(MinSize.Value);
                 sizeInPixels.X = System.Math.Max(minInPixels.X, sizeInPixels.X);
                 sizeInPixels.Y = System.Math.Max(minInPixels.Y, sizeInPixels.Y);
             }
             // apply max size
-            if (MaxSize != null)
-            {
+            if (MaxSize != null) {
                 Point maxInPixels = CalcActualSizeInPixels(MaxSize.Value);
                 sizeInPixels.X = System.Math.Min(maxInPixels.X, sizeInPixels.X);
                 sizeInPixels.Y = System.Math.Min(maxInPixels.Y, sizeInPixels.Y);
@@ -1717,8 +1627,12 @@ namespace GeonBit.UI.Entities
             ret.Height = sizeInPixels.Y;
 
             // make sure its a legal size
-            if (ret.Width < 1) { ret.Width = 1; }
-            if (ret.Height < 1) { ret.Height = 1; }
+            if (ret.Width < 1) {
+                ret.Width = 1;
+            }
+            if (ret.Height < 1) {
+                ret.Height = 1;
+            }
 
             // first calc some helpers
             int parent_left = parentDest.X;
@@ -1734,15 +1648,13 @@ namespace GeonBit.UI.Entities
 
             // if we are in dragging mode we do a little hack to use top-left anchor with the dragged offset
             // note: but only if drag offset was previously set.
-            if (_draggable && !_needToSetDragOffset)
-            {
+            if (_draggable && !_needToSetDragOffset) {
                 anchor = Anchor.TopLeft;
                 offset = _dragOffset;
             }
 
             // calculate position based on anchor, parent and offset
-            switch (anchor)
-            {
+            switch (anchor) {
                 case Anchor.Auto:
                 case Anchor.AutoInline:
                 case Anchor.AutoInlineNoBreak:
@@ -1794,31 +1706,26 @@ namespace GeonBit.UI.Entities
             }
 
             // special case for auto anchors
-            if ((anchor == Anchor.Auto || anchor == Anchor.AutoInline || anchor == Anchor.AutoCenter || anchor == Anchor.AutoInlineNoBreak))
-            {
+            if ((anchor == Anchor.Auto || anchor == Anchor.AutoInline || anchor == Anchor.AutoCenter || anchor == Anchor.AutoInlineNoBreak)) {
                 // get previous entity before this
                 Entity prevEntity = GetPreviousEntity(true);
 
                 // if found entity before this one, align based on it
-                if (prevEntity != null)
-                {
+                if (prevEntity != null) {
                     // make sure sibling is up-to-date
                     prevEntity.UpdateDestinationRectsIfDirty();
 
                     // handle inline align
-                    if (anchor == Anchor.AutoInline || anchor == Anchor.AutoInlineNoBreak)
-                    {
+                    if (anchor == Anchor.AutoInline || anchor == Anchor.AutoInlineNoBreak) {
                         ret.X = prevEntity._destRect.Right + (int)(offset.X + prevEntity._scaledSpaceAfter.X + _scaledSpaceBefore.X);
                         ret.Y = prevEntity._destRect.Y;
                     }
 
                     // handle inline align that ran out of width / or auto anchor not inline
                     if ((anchor == Anchor.AutoInline && ret.Right > parent._destRectInternal.Right) ||
-                        (anchor == Anchor.Auto || anchor == Anchor.AutoCenter))
-                    {
+                        (anchor == Anchor.Auto || anchor == Anchor.AutoCenter)) {
                         // align x
-                        if (anchor != Anchor.AutoCenter)
-                        {
+                        if (anchor != Anchor.AutoCenter) {
                             ret.X = parent_left + (int)offset.X;
                         }
 
@@ -1829,33 +1736,42 @@ namespace GeonBit.UI.Entities
                     }
                 }
                 // if this is the first entity in parent, apply space-before only
-                else
-                {
+                else {
                     ret.X += (int)_scaledSpaceBefore.X;
                     ret.Y += (int)_scaledSpaceBefore.Y;
                 }
             }
 
             // some extra logic for draggables
-            if (_draggable)
-            {
+            if (_draggable) {
                 // if need to init dragged offset, set it
                 // this trick is used so if an object is draggable, we first evaluate its position based on anchor etc, and we use that
                 // position as starting point for the dragging
-                if (_needToSetDragOffset)
-                {
+                if (_needToSetDragOffset) {
                     _dragOffset.X = ret.X - parent_left;
                     _dragOffset.Y = ret.Y - parent_top;
                     _needToSetDragOffset = false;
                 }
 
                 // if draggable and need to be contained inside parent, validate it
-                if (LimitDraggingToParentBoundaries)
-                {
-                    if (ret.X < parent_left) { ret.X = parent_left; _dragOffset.X = 0; }
-                    if (ret.Y < parent_top) { ret.Y = parent_top; _dragOffset.Y = 0; }
-                    if (ret.Right > parent_right) { _dragOffset.X -= ret.Right - parent_right; ; ret.X -= ret.Right - parent_right; }
-                    if (ret.Bottom > parent_bottom) { _dragOffset.Y -= ret.Bottom - parent_bottom; ret.Y -= ret.Bottom - parent_bottom; }
+                if (LimitDraggingToParentBoundaries) {
+                    if (ret.X < parent_left) {
+                        ret.X = parent_left;
+                        _dragOffset.X = 0;
+                    }
+                    if (ret.Y < parent_top) {
+                        ret.Y = parent_top;
+                        _dragOffset.Y = 0;
+                    }
+                    if (ret.Right > parent_right) {
+                        _dragOffset.X -= ret.Right - parent_right;
+                        ;
+                        ret.X -= ret.Right - parent_right;
+                    }
+                    if (ret.Bottom > parent_bottom) {
+                        _dragOffset.Y -= ret.Bottom - parent_bottom;
+                        ret.Y -= ret.Bottom - parent_bottom;
+                    }
                 }
             }
 
@@ -1870,8 +1786,7 @@ namespace GeonBit.UI.Entities
         /// text content, font and word-wrap.
         /// </summary>
         /// <returns>The actual destination rectangle.</returns>
-        virtual public Rectangle GetActualDestRect()
-        {
+        virtual public Rectangle GetActualDestRect() {
             return _destRect;
         }
 
@@ -1880,18 +1795,15 @@ namespace GeonBit.UI.Entities
         /// This is useful for things like DropDown, that when opened they take a larger part of the screen, but we don't
         /// want it to push down other entities.
         /// </summary>
-        virtual internal protected Rectangle GetDestRectForAutoAnchors()
-        {
+        virtual internal protected Rectangle GetDestRectForAutoAnchors() {
             return GetActualDestRect();
         }
 
         /// <summary>
         /// Remove this entity from its parent.
         /// </summary>
-        public void RemoveFromParent()
-        {
-            if (_parent != null)
-            {
+        public void RemoveFromParent() {
+            if (_parent != null) {
                 _parent.RemoveChild(this);
             }
         }
@@ -1901,28 +1813,67 @@ namespace GeonBit.UI.Entities
         /// For example, if "OnClick" will be called on this entity, it will trigger OnClick on 'other' as well.
         /// </summary>
         /// <param name="other">Entity to propagate events to.</param>
-        public virtual void PropagateEventsTo(Entity other)
-        {
-            OnMouseDown += (Entity entity) => { other.OnMouseDown?.Invoke(other); };
-            OnRightMouseDown += (Entity entity) => { other.OnRightMouseDown?.Invoke(other); };
-            OnMouseReleased += (Entity entity) => { other.OnMouseReleased?.Invoke(other); };
-            WhileMouseDown += (Entity entity) => { other.WhileMouseDown?.Invoke(other); };
-            WhileRightMouseDown += (Entity entity) => { other.WhileRightMouseDown?.Invoke(other); };
-            WhileMouseHover += (Entity entity) => { other.WhileMouseHover?.Invoke(other); };
-            WhileMouseHoverOrDown += (Entity entity) => { other.WhileMouseHoverOrDown?.Invoke(other); };
-            OnRightClick += (Entity entity) => { other.OnRightClick?.Invoke(other); };
-            OnClick += (Entity entity) => { other.OnClick?.Invoke(other); };
-            OnValueChange += (Entity entity) => { other.OnValueChange?.Invoke(other); };
-            OnMouseEnter += (Entity entity) => { other.OnMouseEnter?.Invoke(other); };
-            OnMouseLeave += (Entity entity) => { other.OnMouseLeave?.Invoke(other); };
-            OnMouseWheelScroll += (Entity entity) => { other.OnMouseWheelScroll?.Invoke(other); };
-            OnStartDrag += (Entity entity) => { other.OnStartDrag?.Invoke(other); };
-            OnStopDrag += (Entity entity) => { other.OnStopDrag?.Invoke(other); };
-            WhileDragging += (Entity entity) => { other.WhileDragging?.Invoke(other); };
-            BeforeDraw += (Entity entity) => { other.BeforeDraw?.Invoke(other); };
-            AfterDraw += (Entity entity) => { other.AfterDraw?.Invoke(other); };
-            BeforeUpdate += (Entity entity) => { other.BeforeUpdate?.Invoke(other); };
-            AfterUpdate += (Entity entity) => { other.AfterUpdate?.Invoke(other); };
+        public virtual void PropagateEventsTo(Entity other) {
+            OnMouseDown += (Entity entity) => {
+                other.OnMouseDown?.Invoke(other);
+            };
+            OnRightMouseDown += (Entity entity) => {
+                other.OnRightMouseDown?.Invoke(other);
+            };
+            OnMouseReleased += (Entity entity) => {
+                other.OnMouseReleased?.Invoke(other);
+            };
+            WhileMouseDown += (Entity entity) => {
+                other.WhileMouseDown?.Invoke(other);
+            };
+            WhileRightMouseDown += (Entity entity) => {
+                other.WhileRightMouseDown?.Invoke(other);
+            };
+            WhileMouseHover += (Entity entity) => {
+                other.WhileMouseHover?.Invoke(other);
+            };
+            WhileMouseHoverOrDown += (Entity entity) => {
+                other.WhileMouseHoverOrDown?.Invoke(other);
+            };
+            OnRightClick += (Entity entity) => {
+                other.OnRightClick?.Invoke(other);
+            };
+            OnClick += (Entity entity) => {
+                other.OnClick?.Invoke(other);
+            };
+            OnValueChange += (Entity entity) => {
+                other.OnValueChange?.Invoke(other);
+            };
+            OnMouseEnter += (Entity entity) => {
+                other.OnMouseEnter?.Invoke(other);
+            };
+            OnMouseLeave += (Entity entity) => {
+                other.OnMouseLeave?.Invoke(other);
+            };
+            OnMouseWheelScroll += (Entity entity) => {
+                other.OnMouseWheelScroll?.Invoke(other);
+            };
+            OnStartDrag += (Entity entity) => {
+                other.OnStartDrag?.Invoke(other);
+            };
+            OnStopDrag += (Entity entity) => {
+                other.OnStopDrag?.Invoke(other);
+            };
+            WhileDragging += (Entity entity) => {
+                other.WhileDragging?.Invoke(other);
+            };
+            BeforeDraw += (Entity entity) => {
+                other.BeforeDraw?.Invoke(other);
+            };
+            AfterDraw += (Entity entity) => {
+                other.AfterDraw?.Invoke(other);
+            };
+            BeforeUpdate += (Entity entity) => {
+                other.BeforeUpdate?.Invoke(other);
+            };
+            AfterUpdate += (Entity entity) => {
+                other.AfterUpdate?.Invoke(other);
+            };
         }
 
         /// <summary>
@@ -1932,8 +1883,7 @@ namespace GeonBit.UI.Entities
         /// This return the offset between the top left corner of this entity regardless of anchor type.
         /// </remarks>
         /// <returns>Calculated offset from parent top-left corner.</returns>
-        public Vector2 GetRelativeOffset()
-        {
+        public Vector2 GetRelativeOffset() {
             Rectangle dest = GetActualDestRect();
             Rectangle parentDest = _parent.GetActualDestRect();
             return new Vector2(dest.X - parentDest.X, dest.Y - parentDest.Y);
@@ -1944,25 +1894,23 @@ namespace GeonBit.UI.Entities
         /// </summary>
         /// <returns>Entity before this in parent, or null if first in parent or if orphan entity.</returns>
         /// <param name="skipInvisibles">If true, will skip invisible entities, eg will return the first visible older sibling.</param>
-        protected Entity GetPreviousEntity(bool skipInvisibles = false)
-        {
+        protected Entity GetPreviousEntity(bool skipInvisibles = false) {
             // no parent? skip
-            if (_parent == null) { return null; }
+            if (_parent == null) {
+                return null;
+            }
 
             // get siblings and iterate them
             List<Entity> siblings = _parent._children;
             Entity prev = null;
-            foreach (Entity sibling in siblings)
-            {
+            foreach (Entity sibling in siblings) {
                 // when getting to self, break the loop
-                if (sibling == this)
-                {
+                if (sibling == this) {
                     break;
                 }
 
                 // if older sibling is invisible, skip it
-                if (skipInvisibles && !sibling.Visible)
-                {
+                if (skipInvisibles && !sibling.Visible) {
                     continue;
                 }
 
@@ -1977,175 +1925,155 @@ namespace GeonBit.UI.Entities
         /// <summary>
         /// Handle mouse down event.
         /// </summary>
-        virtual protected void DoOnMouseDown()
-        {
+        virtual protected void DoOnMouseDown() {
             OnMouseDown?.Invoke(this);
-            UserInterface.Active.OnMouseDown?.Invoke(this);
+            UserInterface.Instance.OnMouseDown?.Invoke(this);
         }
 
         /// <summary>
         /// Handle mouse up event.
         /// </summary>
-        virtual protected void DoOnMouseReleased()
-        {
+        virtual protected void DoOnMouseReleased() {
             OnMouseReleased?.Invoke(this);
-            UserInterface.Active.OnMouseReleased?.Invoke(this);
+            UserInterface.Instance.OnMouseReleased?.Invoke(this);
         }
 
         /// <summary>
         /// Handle mouse click event.
         /// </summary>
-        virtual protected void DoOnClick()
-        {
+        virtual protected void DoOnClick() {
             OnClick?.Invoke(this);
-            UserInterface.Active.OnClick?.Invoke(this);
+            UserInterface.Instance.OnClick?.Invoke(this);
         }
 
         /// <summary>
         /// Handle mouse down event, called every frame while down.
         /// </summary>
-        virtual protected void DoWhileMouseDown()
-        {
+        virtual protected void DoWhileMouseDown() {
             WhileMouseDown?.Invoke(this);
-            UserInterface.Active.WhileMouseDown?.Invoke(this);
+            UserInterface.Instance.WhileMouseDown?.Invoke(this);
         }
 
         /// <summary>
         /// Handle mouse hover event, called every frame while hover.
         /// </summary>
-        virtual protected void DoWhileMouseHover()
-        {
+        virtual protected void DoWhileMouseHover() {
             WhileMouseHover?.Invoke(this);
-            UserInterface.Active.WhileMouseHover?.Invoke(this);
+            UserInterface.Instance.WhileMouseHover?.Invoke(this);
         }
 
         /// <summary>
         /// Handle mouse hover or down event, called every frame while hover.
         /// </summary>
-        virtual protected void DoWhileMouseHoverOrDown()
-        {
+        virtual protected void DoWhileMouseHoverOrDown() {
             // invoke callback and global callback
             WhileMouseHoverOrDown?.Invoke(this);
-            UserInterface.Active.WhileMouseHoverOrDown?.Invoke(this);
+            UserInterface.Instance.WhileMouseHoverOrDown?.Invoke(this);
 
             // do right mouse click event
-            if (MouseInput.MouseButtonClick(MouseButton.Right))
-            {
+            if (MouseInput.MouseButtonClick(MouseButton.Right)) {
                 OnRightClick?.Invoke(this);
-                UserInterface.Active.OnRightClick?.Invoke(this);
+                UserInterface.Instance.OnRightClick?.Invoke(this);
             }
             // do right mouse down event
-            else if (MouseInput.MouseButtonPressed(MouseButton.Right))
-            {
+            else if (MouseInput.MouseButtonPressed(MouseButton.Right)) {
                 OnRightMouseDown?.Invoke(this);
-                UserInterface.Active.OnRightMouseDown?.Invoke(this);
+                UserInterface.Instance.OnRightMouseDown?.Invoke(this);
             }
             // do while right mouse down even
-            else if (MouseInput.MouseButtonDown(MouseButton.Right))
-            {
+            else if (MouseInput.MouseButtonDown(MouseButton.Right)) {
                 WhileRightMouseDown?.Invoke(this);
-                UserInterface.Active.WhileRightMouseDown?.Invoke(this);
+                UserInterface.Instance.WhileRightMouseDown?.Invoke(this);
             }
         }
 
         /// <summary>
         /// Handle value change event (for entities with value).
         /// </summary>
-        virtual protected void DoOnValueChange()
-        {
+        virtual protected void DoOnValueChange() {
             OnValueChange?.Invoke(this);
-            UserInterface.Active.OnValueChange?.Invoke(this);
+            UserInterface.Instance.OnValueChange?.Invoke(this);
         }
 
         /// <summary>
         /// Handle mouse enter event.
         /// </summary>
-        virtual protected void DoOnMouseEnter()
-        {
+        virtual protected void DoOnMouseEnter() {
             OnMouseEnter?.Invoke(this);
-            UserInterface.Active.OnMouseEnter?.Invoke(this);
+            UserInterface.Instance.OnMouseEnter?.Invoke(this);
         }
 
         /// <summary>
         /// Handle mouse leave event.
         /// </summary>
-        virtual protected void DoOnMouseLeave()
-        {
+        virtual protected void DoOnMouseLeave() {
             OnMouseLeave?.Invoke(this);
-            UserInterface.Active.OnMouseLeave?.Invoke(this);
+            UserInterface.Instance.OnMouseLeave?.Invoke(this);
         }
 
         /// <summary>
         /// Handle start dragging event.
         /// </summary>
-        virtual protected void DoOnStartDrag()
-        {
+        virtual protected void DoOnStartDrag() {
             OnStartDrag?.Invoke(this);
-            UserInterface.Active.OnStartDrag?.Invoke(this);
+            UserInterface.Instance.OnStartDrag?.Invoke(this);
         }
 
         /// <summary>
         /// Handle end dragging event.
         /// </summary>
-        virtual protected void DoOnStopDrag()
-        {
+        virtual protected void DoOnStopDrag() {
             OnStopDrag?.Invoke(this);
-            UserInterface.Active.OnStopDrag?.Invoke(this);
+            UserInterface.Instance.OnStopDrag?.Invoke(this);
         }
 
         /// <summary>
         /// Handle the while-dragging event.
         /// </summary>
-        virtual protected void DoWhileDragging()
-        {
+        virtual protected void DoWhileDragging() {
             WhileDragging?.Invoke(this);
-            UserInterface.Active.WhileDragging?.Invoke(this);
+            UserInterface.Instance.WhileDragging?.Invoke(this);
         }
 
         /// <summary>
         /// Handle when mouse wheel scroll and this entity is the active entity.
         /// </summary>
-        virtual protected void DoOnMouseWheelScroll()
-        {
+        virtual protected void DoOnMouseWheelScroll() {
             OnMouseWheelScroll?.Invoke(this);
-            UserInterface.Active.OnMouseWheelScroll?.Invoke(this);
+            UserInterface.Instance.OnMouseWheelScroll?.Invoke(this);
         }
 
         /// <summary>
         /// Called every frame after update.
         /// </summary>
-        virtual protected void DoAfterUpdate()
-        {
+        virtual protected void DoAfterUpdate() {
             AfterUpdate?.Invoke(this);
-            UserInterface.Active.AfterUpdate?.Invoke(this);
+            UserInterface.Instance.AfterUpdate?.Invoke(this);
         }
 
         /// <summary>
         /// Called every time the visibility property of this entity changes.
         /// </summary>
-        virtual protected void DoOnVisibilityChange()
-        {
+        virtual protected void DoOnVisibilityChange() {
             // invoke callbacks
             OnVisiblityChange?.Invoke(this);
-            UserInterface.Active.OnVisiblityChange?.Invoke(this);
+            UserInterface.Instance.OnVisiblityChange?.Invoke(this);
         }
 
         /// <summary>
         /// Called every frame before update.
         /// </summary>
-        virtual protected void DoBeforeUpdate()
-        {
+        virtual protected void DoBeforeUpdate() {
             BeforeUpdate?.Invoke(this);
-            UserInterface.Active.BeforeUpdate?.Invoke(this);
+            UserInterface.Instance.BeforeUpdate?.Invoke(this);
         }
 
         /// <summary>
         /// Called every time this entity is focused / unfocused.
         /// </summary>
-        virtual protected void DoOnFocusChange()
-        {
+        virtual protected void DoOnFocusChange() {
             OnFocusChange?.Invoke(this);
-            UserInterface.Active.OnFocusChange?.Invoke(this);
+            UserInterface.Instance.OnFocusChange?.Invoke(this);
         }
 
         /// <summary>
@@ -2154,8 +2082,7 @@ namespace GeonBit.UI.Entities
         /// <remarks>This function result is affected by the 'UseActualSizeForCollision' flag.</remarks>
         /// <param name="point">Point to test.</param>
         /// <returns>True if point is in entity's boundaries (destination rectangle)</returns>
-        virtual public bool IsTouching(Vector2 point)
-        {
+        virtual public bool IsTouching(Vector2 point) {
             // adjust scrolling
             point += _lastScrollVal.ToVector2();
 
@@ -2173,32 +2100,36 @@ namespace GeonBit.UI.Entities
         /// </summary>
         /// <remarks>This function should be overrided and implemented by different entities, and either return constant True or False.</remarks>
         /// <returns>True if entity is naturally interactable.</returns>
-        virtual internal protected bool IsNaturallyInteractable()
-        {
+        virtual internal protected bool IsNaturallyInteractable() {
             return false;
         }
 
         /// <summary>
         /// Return if the mouse is currently pressing on this entity (eg over it and left mouse button is down).
         /// </summary>
-        public bool IsMouseDown { get { return _entityState == EntityState.MouseDown; } }
+        public bool IsMouseDown {
+            get {
+                return _entityState == EntityState.MouseDown;
+            }
+        }
 
         /// <summary>
         /// Return if the mouse is currently over this entity (regardless of whether or not mouse button is down).
         /// </summary>
-        public bool IsMouseOver { get { return _isMouseOver; } }
+        public bool IsMouseOver {
+            get {
+                return _isMouseOver;
+            }
+        }
 
         /// <summary>
         /// Update all animators attached to this entity.
         /// </summary>
         /// <param name="recursive">If true, will also update children's animators</param>
-        protected internal void UpdateAnimators(bool recursive)
-        {
+        protected internal void UpdateAnimators(bool recursive) {
             // update animators
-            foreach (var animator in _animators)
-            {
-                if (animator.Enabled)
-                {
+            foreach (var animator in _animators) {
+                if (animator.Enabled) {
                     animator.Update();
                 }
             }
@@ -2207,10 +2138,8 @@ namespace GeonBit.UI.Entities
             _animators.RemoveAll(x => x.IsDone && x.ShouldRemoveWhenDone);
 
             // update children animations
-            if (recursive)
-            {
-                foreach (var child in _children)
-                {
+            if (recursive) {
+                foreach (var child in _children) {
                     child.UpdateAnimators(true);
                 }
             }
@@ -2219,8 +2148,7 @@ namespace GeonBit.UI.Entities
         /// <summary>
         /// Mark that this entity boundaries or style changed and it need to recalculate cached destination rect and other things.
         /// </summary>
-        internal protected void MarkAsDirty()
-        {
+        internal protected void MarkAsDirty() {
             _isDirty = true;
         }
 
@@ -2228,11 +2156,9 @@ namespace GeonBit.UI.Entities
         /// Remove the IsDirty flag.
         /// </summary>
         /// <param name="updateChildren">If true, will set a flag that will still make children update.</param>
-        internal void ClearDirtyFlag(bool updateChildren = false)
-        {
+        internal void ClearDirtyFlag(bool updateChildren = false) {
             _isDirty = false;
-            if (updateChildren)
-            {
+            if (updateChildren) {
                 _destRectVersion++;
             }
         }
@@ -2244,12 +2170,10 @@ namespace GeonBit.UI.Entities
         /// <param name="dragTargetEntity">The deepest child dragable entity with highest priority that we point on and can be drag if mouse down.</param>
         /// <param name="wasEventHandled">Set to true if current event was already handled by a deeper child.</param>
         /// <param name="scrollVal">Combined scrolling value (panels with scrollbar etc) of all parents.</param>
-        virtual protected void UpdateChildren(ref Entity targetEntity, ref Entity dragTargetEntity, ref bool wasEventHandled, Point scrollVal)
-        {
+        virtual protected void UpdateChildren(ref Entity targetEntity, ref Entity dragTargetEntity, ref bool wasEventHandled, Point scrollVal) {
             // update all children (note: we go in reverse order so that entities on front will receive events before entites on back.
             List<Entity> childrenSorted = GetSortedChildren();
-            for (int i = childrenSorted.Count - 1; i >= 0; i--)
-            {
+            for (int i = childrenSorted.Count - 1; i >= 0; i--) {
                 childrenSorted[i].Update(ref targetEntity, ref dragTargetEntity, ref wasEventHandled, scrollVal);
             }
         }
@@ -2261,8 +2185,7 @@ namespace GeonBit.UI.Entities
         /// <param name="dragTargetEntity">The deepest child dragable entity with highest priority that we point on and can be drag if mouse down.</param>
         /// <param name="wasEventHandled">Set to true if current event was already handled by a deeper child.</param>
         /// <param name="scrollVal">Combined scrolling value (panels with scrollbar etc) of all parents.</param>
-        virtual public void Update(ref Entity targetEntity, ref Entity dragTargetEntity, ref bool wasEventHandled, Point scrollVal)
-        {
+        virtual public void Update(ref Entity targetEntity, ref Entity dragTargetEntity, ref bool wasEventHandled, Point scrollVal) {
             // set last scroll var
             _lastScrollVal = scrollVal;
 
@@ -2270,15 +2193,13 @@ namespace GeonBit.UI.Entities
             UpdateAnimators(false);
 
             // check if should invoke the spawn effect
-            if (_isFirstUpdate)
-            {
+            if (_isFirstUpdate) {
                 DoOnFirstUpdate();
                 _isFirstUpdate = false;
             }
 
             // if inherit parent state just copy it and stop
-            if (InheritParentState)
-            {
+            if (InheritParentState) {
                 _entityState = _parent._entityState;
                 _isMouseOver = _parent._isMouseOver;
                 IsFocused = _parent.IsFocused;
@@ -2296,32 +2217,25 @@ namespace GeonBit.UI.Entities
             _isCurrentlyDisabled = IsDisabled();
 
             // if disabled, invisible, or locked - skip
-            if (_isCurrentlyDisabled || IsLocked() || !IsVisible())
-            {
+            if (_isCurrentlyDisabled || IsLocked() || !IsVisible()) {
                 // if this very entity is locked (eg not locked due to parent being locked),
                 // iterate children and invoke those with DoEventsIfDirectParentIsLocked setting
-                if (Locked)
-                {
-                    for (int i = _children.Count - 1; i >= 0; i--)
-                    {
-                        if (_children[i].DoEventsIfDirectParentIsLocked)
-                        {
+                if (Locked) {
+                    for (int i = _children.Count - 1; i >= 0; i--) {
+                        if (_children[i].DoEventsIfDirectParentIsLocked) {
                             _children[i].Update(ref targetEntity, ref dragTargetEntity, ref wasEventHandled, scrollVal);
                         }
                     }
                 }
 
                 // if was previously interactable, we might need to trigger some events
-                if (_isInteractable)
-                {
+                if (_isInteractable) {
                     // if mouse was over, trigger mouse leave event
-                    if (_entityState == EntityState.MouseHover)
-                    {
+                    if (_entityState == EntityState.MouseHover) {
                         DoOnMouseLeave();
                     }
                     // if mouse was down, trigger mouse up and leave events
-                    else if (_entityState == EntityState.MouseDown)
-                    {
+                    else if (_entityState == EntityState.MouseDown) {
                         DoOnMouseReleased();
                         DoOnMouseLeave();
                     }
@@ -2334,8 +2248,7 @@ namespace GeonBit.UI.Entities
             }
 
             // if click-through is true, update children and stop here
-            if (ClickThrough)
-            {
+            if (ClickThrough) {
                 UpdateChildren(ref targetEntity, ref dragTargetEntity, ref wasEventHandled, scrollVal);
                 return;
             }
@@ -2343,7 +2256,7 @@ namespace GeonBit.UI.Entities
             // update dest rect if needed (dest rect is calculated before draw, but is used for mouse collision detection as well,
             // so its better to calculate it here too in case something changed).
             UpdateDestinationRectsIfDirty();
-            
+
             // set if interactable
             _isInteractable = true;
 
@@ -2359,21 +2272,17 @@ namespace GeonBit.UI.Entities
             // STEP 1: FIRST WE CALCULATE ENTITY STATE (EG MOUST HOVER / MOUSE DOWN / ..)
 
             // only if event was not already catched by another entity, check for events
-            if (!wasEventHandled)
-            {
+            if (!wasEventHandled) {
                 // if need to calculate state locally:
-                if (!InheritParentState)
-                {
+                if (!InheritParentState) {
                     // reset the mouse-over flag
                     _isMouseOver = false;
                     _entityState = EntityState.Default;
 
                     // set mouse state
-                    if (IsTouching(mousePos))
-                    {
+                    if (IsTouching(mousePos)) {
                         // set self as the current target, unless a sibling got the event first
-                        if (targetEntity == null || targetEntity._parent != _parent)
-                        {
+                        if (targetEntity == null || targetEntity._parent != _parent) {
                             targetEntity = this;
                         }
 
@@ -2387,14 +2296,12 @@ namespace GeonBit.UI.Entities
                 }
 
                 // set if focused
-                if (MouseInput.MouseButtonPressed())
-                {
+                if (MouseInput.MouseButtonPressed()) {
                     IsFocused = _isMouseOver;
                 }
             }
             // if currently other entity is targeted and mouse clicked, set focused to false
-            else if (MouseInput.MouseButtonClick())
-            {
+            else if (MouseInput.MouseButtonClick()) {
                 IsFocused = false;
             }
 
@@ -2404,16 +2311,14 @@ namespace GeonBit.UI.Entities
             UpdateChildren(ref targetEntity, ref dragTargetEntity, ref wasEventHandled, scrollVal);
 
             // check dragging after children so that the most nested entity gets priority
-            if ((_draggable || IsNaturallyInteractable()) && dragTargetEntity == null && _isMouseOver && MouseInput.MouseButtonPressed(MouseButton.Left))
-            {
+            if ((_draggable || IsNaturallyInteractable()) && dragTargetEntity == null && _isMouseOver && MouseInput.MouseButtonPressed(MouseButton.Left)) {
                 dragTargetEntity = this;
             }
 
             // STEP 3: CALL EVENTS
 
             // if selected target is this
-            if (targetEntity == this)
-            {
+            if (targetEntity == this) {
                 // handled events
                 wasEventHandled = true;
 
@@ -2421,58 +2326,46 @@ namespace GeonBit.UI.Entities
                 DoWhileMouseHoverOrDown();
 
                 // set mouse enter / mouse leave
-                if (_isMouseOver && !prevMouseOver)
-                {
+                if (_isMouseOver && !prevMouseOver) {
                     DoOnMouseEnter();
                 }
 
                 // generate events
-                if (prevState != _entityState)
-                {
+                if (prevState != _entityState) {
                     // mouse down
-                    if (MouseInput.MouseButtonPressed())
-                    {
+                    if (MouseInput.MouseButtonPressed()) {
                         DoOnMouseDown();
                     }
                     // mouse up
-                    if (MouseInput.MouseButtonReleased())
-                    {
+                    if (MouseInput.MouseButtonReleased()) {
                         DoOnMouseReleased();
                     }
                     // mouse click
-                    if (MouseInput.MouseButtonClick())
-                    {
+                    if (MouseInput.MouseButtonClick()) {
                         DoOnClick();
                     }
                 }
 
                 // call the while-mouse-down / while-mouse-hover events
-                if (_entityState == EntityState.MouseDown)
-                {
+                if (_entityState == EntityState.MouseDown) {
                     DoWhileMouseDown();
-                }
-                else
-                {
+                } else {
                     DoWhileMouseHover();
                 }
             }
             // if not current target, clear entity state
-            else
-            {
+            else {
                 _entityState = EntityState.Default;
             }
 
             // mouse leave events
-            if (!_isMouseOver && prevMouseOver)
-            {
+            if (!_isMouseOver && prevMouseOver) {
                 DoOnMouseLeave();
             }
 
             // handle mouse wheel scroll over this entity
-            if (targetEntity == this || UserInterface.Active.ActiveEntity == this)
-            {
-                if (MouseInput.MouseWheelChange != 0)
-                {
+            if (targetEntity == this || UserInterface.Instance.ActiveEntity == this) {
+                if (MouseInput.MouseWheelChange != 0) {
                     DoOnMouseWheelScroll();
                 }
             }
@@ -2480,11 +2373,9 @@ namespace GeonBit.UI.Entities
             // STEP 4: HANDLE DRAGGING FOR DRAGABLES
 
             // if draggable, and after calling all the children target is self, it means we are being dragged!
-            if (_draggable && (dragTargetEntity == this) && IsFocused)
-            {
+            if (_draggable && (dragTargetEntity == this) && IsFocused) {
                 // check if we need to start dragging the entity that was not dragged before
-                if (!_isBeingDragged && MouseInput.MousePositionDiff.Length() != 0)
-                {
+                if (!_isBeingDragged && MouseInput.MousePositionDiff.Length() != 0) {
                     // remove self from parent and add again. this trick is to keep the dragged entity always on-top
                     Entity parent = _parent;
                     RemoveFromParent();
@@ -2496,24 +2387,21 @@ namespace GeonBit.UI.Entities
                 }
 
                 // if being dragged..
-                if (_isBeingDragged)
-                {
+                if (_isBeingDragged) {
                     // update drag offset and call the dragging event
                     _dragOffset += MouseInput.MousePositionDiff;
                     DoWhileDragging();
                 }
             }
             // if not currently dragged but was dragged last frane, call the end dragging event
-            else if (_isBeingDragged)
-            {
+            else if (_isBeingDragged) {
                 _isBeingDragged = false;
                 DoOnStopDrag();
                 MarkAsDirty();
             }
 
             // if being dragged, mark as dirty
-            if (_isBeingDragged)
-            {
+            if (_isBeingDragged) {
                 MarkAsDirty();
             }
 

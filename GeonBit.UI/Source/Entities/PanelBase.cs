@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GeonBit.UI.DataTypes;
 using GeonBit.UI.DataTypes.Metadata;
+using GeonBit.UI.Enums;
 
 namespace GeonBit.UI.Entities
 {
@@ -168,7 +169,7 @@ namespace GeonBit.UI.Entities
             // check if need to update size
             if ((Size.Y != maxHeight))
             {
-                Size = new Vector2(Size.X, maxHeight / UserInterface.Active.GlobalScale);
+                Size = new Vector2(Size.X, maxHeight / UserInterface.Instance.GlobalScale);
                 UpdateDestinationRects();
                 foreach (var child in _children)
                 {
@@ -217,7 +218,7 @@ namespace GeonBit.UI.Entities
                 Vector2 frameSize = _customFrame ?? new Vector2(data.FrameWidth, data.FrameHeight);
 
                 // draw panel
-                UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, frameSize, 1f, FillColor, Scale);
+                UserInterface.Instance.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, frameSize, 1f, FillColor, Scale);
             }
 
             // call base draw function

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GeonBit.UI.DataTypes;
+using GeonBit.UI.Enums;
 
 namespace GeonBit.UI.Entities
 {
@@ -63,7 +64,7 @@ namespace GeonBit.UI.Entities
             UpdateStyle(DefaultStyle);
 
             // create and set checkbox paragraph
-            if (!UserInterface.Active._isDeserializing)
+            if (!UserInterface.Instance._isDeserializing)
             {
                 TextParagraph = UserInterface.DefaultParagraph(text, Anchor.CenterLeft);
                 TextParagraph.UpdateStyle(DefaultParagraphStyle);
@@ -145,7 +146,7 @@ namespace GeonBit.UI.Entities
                                 (int)(_destRect.Y + _destRect.Height / 2 - actualSize.Y / 2),
                                 (int)(actualSize.X),
                                 (int)(actualSize.Y));
-            dest = UserInterface.Active.DrawUtils.ScaleRect(dest, Scale);
+            dest = UserInterface.Instance.DrawUtils.ScaleRect(dest, Scale);
 
             // source rect
             Rectangle src = new Rectangle(0, 0, texture.Width, texture.Height);

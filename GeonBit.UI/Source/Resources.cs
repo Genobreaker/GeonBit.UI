@@ -4,6 +4,7 @@ using System.Linq;
 using GeonBit.UI.DataTypes;
 using GeonBit.UI.DataTypes.Metadata;
 using GeonBit.UI.Entities;
+using GeonBit.UI.Enums;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -185,9 +186,13 @@ namespace GeonBit.UI {
         
         private static void LoadDefaultStyles(ref StyleSheet sheet, string entityName) {
             string stylesheetBase = "styles/" + entityName;
-            FillDefaultStyles(ref sheet, EntityState.Default, Resources.content.Load<DefaultStyles>(stylesheetBase + "-Default"));
-            FillDefaultStyles(ref sheet, EntityState.MouseHover, Resources.content.Load<DefaultStyles>(stylesheetBase + "-MouseHover"));
-            FillDefaultStyles(ref sheet, EntityState.MouseDown, Resources.content.Load<DefaultStyles>(stylesheetBase + "-MouseDown"));
+            try {
+                FillDefaultStyles(ref sheet, EntityState.Default, Resources.content.Load<DefaultStyles>(stylesheetBase + "-Default"));
+                FillDefaultStyles(ref sheet, EntityState.MouseHover, Resources.content.Load<DefaultStyles>(stylesheetBase + "-MouseHover"));
+                FillDefaultStyles(ref sheet, EntityState.MouseDown, Resources.content.Load<DefaultStyles>(stylesheetBase + "-MouseDown"));
+            } catch (ContentLoadException cle) {
+                cle.ToString();
+            }
         }
 
         private static void FillDefaultStyles(ref StyleSheet sheet, EntityState state, DefaultStyles styles) {

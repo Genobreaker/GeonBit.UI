@@ -1,5 +1,6 @@
 ﻿using GeonBit.UI;
 using GeonBit.UI.Entities;
+using GeonBit.UI.Enums;
 using Microsoft.Xna.Framework;
 
 namespace GameInterface.Screens {
@@ -15,7 +16,7 @@ namespace GameInterface.Screens {
             Button statisticsButton = new Button("Statistics", ButtonSkin.Default, Anchor.Auto, new Vector2(0, 50), new Vector2(0));
             Button backButton = new Button("Back", ButtonSkin.Default, Anchor.Auto, new Vector2(0, 50), new Vector2(0, 20));
             backButton.OnClick = (Entity btn) => {
-                UserInterface.Active.SetCurrentScreen(typeof(MainMenuScreen));
+                UserInterface.Instance.SetCurrentScreen(typeof(MainMenuScreen));
             };
 
             menuPanel.AddChild(multiplayerButton);

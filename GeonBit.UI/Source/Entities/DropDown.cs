@@ -13,6 +13,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using GeonBit.UI.Enums;
 
 namespace GeonBit.UI.Entities
 {
@@ -152,7 +153,7 @@ namespace GeonBit.UI.Entities
             // to get collision right when list is opened
             UseActualSizeForCollision = true;
 
-            if (!UserInterface.Active._isDeserializing)
+            if (!UserInterface.Instance._isDeserializing)
             {
 
                 // create the panel and paragraph used to show currently selected value (what's shown when drop-down is closed)
@@ -368,7 +369,7 @@ namespace GeonBit.UI.Entities
         private void OnDropDownVisibilityChange()
         {
             // if during deserialize, skip
-            if (UserInterface.Active._isDeserializing)
+            if (UserInterface.Instance._isDeserializing)
                 return;
 
             // update arrow image
@@ -376,7 +377,7 @@ namespace GeonBit.UI.Entities
 
             // focus on selectlist
             _selectList.IsFocused = true;
-            UserInterface.Active.ActiveEntity = _selectList;
+            UserInterface.Instance.ActiveEntity = _selectList;
 
             // update destination rectangles
             _selectList.UpdateDestinationRects();

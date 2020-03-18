@@ -62,7 +62,7 @@ namespace GeonBit.UI.Animators
             }
 
             // update animation and calc new position
-            var dt = (float)UserInterface.Active.CurrGameTime.ElapsedGameTime.TotalSeconds;
+            var dt = (float)UserInterface.Instance.CurrGameTime.ElapsedGameTime.TotalSeconds;
             _timeForNextChar -= dt * SpeedFactor;
             if (_timeForNextChar <= 0f)
             {

@@ -10,6 +10,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using GeonBit.UI.DataTypes;
+using GeonBit.UI.Enums;
 
 namespace GeonBit.UI.Entities
 {

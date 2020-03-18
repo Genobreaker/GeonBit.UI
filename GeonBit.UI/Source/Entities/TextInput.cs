@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using GeonBit.UI.Entities.TextValidators;
+using GeonBit.UI.Enums;
 
 namespace GeonBit.UI.Entities
 {
@@ -125,7 +126,7 @@ namespace GeonBit.UI.Entities
             // set limit by size - default true in single-line, default false in multi-line
             LimitBySize = !_multiLine;
 
-            if (!UserInterface.Active._isDeserializing)
+            if (!UserInterface.Instance._isDeserializing)
             {
 
                 // create paragraph to show current value
@@ -551,7 +552,7 @@ namespace GeonBit.UI.Entities
         override protected void DoBeforeUpdate()
         {
             // animate caret
-            _caretAnim += (float)UserInterface.Active.CurrGameTime.ElapsedGameTime.TotalSeconds * CaretBlinkingSpeed;
+            _caretAnim += (float)UserInterface.Instance.CurrGameTime.ElapsedGameTime.TotalSeconds * CaretBlinkingSpeed;
 
             // if focused, and got character input in this frame..
             if (IsFocused)

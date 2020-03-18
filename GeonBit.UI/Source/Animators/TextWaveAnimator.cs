@@ -56,7 +56,7 @@ namespace GeonBit.UI.Animators
             var paragraph = TargetEntity as Entities.RichParagraph;
 
             // update animation
-            var dt = (float)UserInterface.Active.CurrGameTime.ElapsedGameTime.TotalSeconds;
+            var dt = (float)UserInterface.Instance.CurrGameTime.ElapsedGameTime.TotalSeconds;
             _currPosition += dt * SpeedFactor;
 
             // wrap position

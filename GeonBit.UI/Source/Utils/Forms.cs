@@ -1,10 +1,9 @@
-﻿using GeonBit.UI;
+﻿using System.Collections.Generic;
 using GeonBit.UI.Entities;
+using GeonBit.UI.Enums;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 
-namespace GeonBit.UI.Utils.Forms
-{
+namespace GeonBit.UI.Utils.Forms {
     /// <summary>
     /// Form field types.
     /// </summary>

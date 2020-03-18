@@ -19,6 +19,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GeonBit.UI.DataTypes;
 using GeonBit.UI.DataTypes.Metadata;
+using GeonBit.UI.Enums;
 
 namespace GeonBit.UI.Entities
 {
@@ -91,7 +92,7 @@ namespace GeonBit.UI.Entities
             // update styles
             UpdateStyle(DefaultStyle);
 
-            if (!UserInterface.Active._isDeserializing)
+            if (!UserInterface.Instance._isDeserializing)
             {
                 // create and set button paragraph
                 ButtonParagraph = UserInterface.DefaultParagraph(text, Anchor.Center);
@@ -217,12 +218,12 @@ namespace GeonBit.UI.Entities
             if (frameSize.Length() > 0)
             {
                 float scale = frameSize.Y > 0 ? Scale : 1f;
-                UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, frameSize, 1, FillColor, scale);
+                UserInterface.Instance.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, frameSize, 1, FillColor, scale);
             }
             // draw the button background without frame (just stretch texture)
             else
             {
-                UserInterface.Active.DrawUtils.DrawImage(spriteBatch, texture, _destRect, FillColor, 1);
+                UserInterface.Instance.DrawUtils.DrawImage(spriteBatch, texture, _destRect, FillColor, 1);
             }
 
             // call base draw function

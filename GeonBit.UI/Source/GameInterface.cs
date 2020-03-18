@@ -4,6 +4,8 @@ using System.Linq;
 using System.Xml.Serialization;
 using GeonBit.UI.DataTypes.Metadata;
 using GeonBit.UI.Entities;
+using GeonBit.UI.Enums;
+using GeonBit.UI.Exceptions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -35,66 +37,66 @@ namespace GeonBit.UI {
     /// <returns></returns>
     public delegate Paragraph DefaultParagraphGenerator(string text, Anchor anchor, Color? color = null, float? scale = null, Vector2? size = null, Vector2? offset = null);
 
-    /// <summary>
-    /// Curser styles / types.
-    /// </summary>
-    public enum CursorType {
-        /// <summary>Default cursor.</summary>
-        Default,
-
-        /// <summary>Pointing hand cursor.</summary>
-        Pointer,
-
-        /// <summary>Text-input I-beam cursor.</summary>
-        IBeam,
-    };
-
-    /// <summary>
-    /// Enum with all the built-in themes.
-    /// </summary>
-    public enum BuiltinThemes {
-        /// <summary>
-        /// Old-school style theme with hi-res textures.
-        /// </summary>
-        hd,
-
-        /// <summary>
-        /// Old-school style theme with low-res textures.
-        /// </summary>
-        lowres,
-
-        /// <summary>
-        /// Clean, editor-like theme.
-        /// </summary>
-        editor,
-    }
-
-    public class UserInterface : IDisposable {
+    public sealed class UserInterface : IDisposable {
 
         #region Fields and Properties
 
-        #region Interface Provider
+        #region Instance
+        
+        private static readonly object instanceLock = new object();
 
-        public IMouseInput MouseInputProvider;
+        private static UserInterface instance = null;
 
-        public IKeyboardInput KeyboardInputProvider;
+        public static UserInterface Instance {
+            get {
+                if (instance == null) {
+                    throw new InvalidOperationException("The instance for GameInterface has not yet been created.");
+                } else {
+                    return instance;
+                }
+            }
+        }
 
         #endregion
 
-        private List<Screen> screens = new List<Screen>();
+        #region Input Manager
 
-        public static UserInterface Active = null;
+        public IMouseInput MouseInputProvider {
+            get; private set;
+        }
+
+        public IKeyboardInput KeyboardInputProvider {
+            get; private set;
+        }
+
+        #endregion
+
+        #region Game Components
 
         public GameTime CurrGameTime {
             get; private set;
         }
 
-        private static ContentManager content;
+        private List<Screen> screens = new List<Screen>();
+        
+        internal Game Game {
+            get; private set;
+        }
+
+        internal RootPanel Root {
+            get; private set;
+        }
+
+        private ContentManager content;
+
+        #endregion
+
+        #region Other Fields
 
         private RenderTarget2D _renderTarget = null;
-        
+
         private bool _useRenderTarget = false;
-        
+
         internal bool _isDeserializing = false;
 
         public bool SilentSoftErrors = false;
@@ -123,14 +125,7 @@ namespace GeonBit.UI {
                 return _renderTarget;
             }
         }
-
-        /// <summary>
-        /// Get the root entity.
-        /// </summary>
-        internal RootPanel Root {
-            get; private set;
-        }
-
+        
         /// <summary>
         /// Blend state to use when rendering UI.
         /// </summary>
@@ -235,6 +230,8 @@ namespace GeonBit.UI {
 
         #endregion
 
+        #endregion
+
         #region Event Callbacks
 
         /// <summary>Callback to execute when mouse button is pressed over an entity (called once when button is pressed).</summary>
@@ -309,50 +306,41 @@ namespace GeonBit.UI {
         #endregion
 
         #region Constructors and Destructor
-
-        /// <summary>
-        /// Create the user interface instance.
-        /// </summary>
-        public UserInterface() {
-            // sanity test
-            if (content == null) {
-                throw new Exceptions.InvalidStateException("Cannot create a UserInterface before calling UserInterface.Initialize()!");
-            }
-
-            // create default input providers
-            MouseInputProvider = new DefaultInputProvider();
-            KeyboardInputProvider = new DefaultInputProvider();
-
-            // create draw utils
-            DrawUtils = new DrawUtils();
-
-            // create the root panel
-            Root = new RootPanel();
-
-            // set default cursor
-            SetCursor(CursorType.Default);
+        
+        private UserInterface() {
+            this.MouseInputProvider = new DefaultInputProvider();
+            this.KeyboardInputProvider = new DefaultInputProvider();
+            this.DrawUtils = new DrawUtils();
+            this.Root = new RootPanel();
+            this.SetCursor(CursorType.Default);
         }
-
-        /// <summary>
-        /// UserInterface destructor.
-        /// </summary>
+        
         ~UserInterface() {
-            Dispose();
+            this.Dispose();
         }
 
         #endregion
 
         #region Methods
 
-        /// <summary>
-        /// Initialize UI manager (mostly load resources and set some defaults).
-        /// </summary>
-        /// <param name="contentManager">Content manager.</param>
-        /// <param name="theme">Which UI theme to use (see options in Content/GeonBit.UI/themes/). This affect the appearance of all textures and effects.</param>
-        public static void Initialize(ContentManager contentManager) {
-            content = contentManager;
-            Resources.LoadContent(content);
-            Active = new UserInterface();
+        public static void CreateIntance(Game game) {
+            if (instance == null) {
+                lock (instanceLock) {
+                    if (instance == null) {
+                        instance = new UserInterface();
+                        instance.Game = game;
+                    }
+                }
+            }
+        }
+        
+        public static void Initialize() {
+            if (Instance == null) {
+                throw new InvalidOperationException("The instance for GameInterface has not yet been created.");
+            }
+
+            Instance.content = new ContentManager(Instance.Game.Services, "Content");
+            Resources.LoadContent(Instance.content);
         }
 
         /// <summary>
@@ -387,10 +375,10 @@ namespace GeonBit.UI {
             tooltip.BeforeDraw += (Entity ent) => {
                 // get dest rect and calculate tooltip position based on size and mouse position
                 var destRect = tooltip.GetActualDestRect();
-                var position = UserInterface.Active.GetTransformedCursorPos(new Vector2(-destRect.Width / 2, -destRect.Height - 20));
+                var position = UserInterface.instance.GetTransformedCursorPos(new Vector2(-destRect.Width / 2, -destRect.Height - 20));
 
                 // make sure tooltip is not out of screen boundaries
-                var screenBounds = Active.Root.GetActualDestRect();
+                var screenBounds = instance.Root.GetActualDestRect();
                 if (position.Y < screenBounds.Top)
                     position.Y = screenBounds.Top;
                 if (position.Y > screenBounds.Bottom - destRect.Height)
@@ -401,7 +389,7 @@ namespace GeonBit.UI {
                     position.X = screenBounds.Right - destRect.Width;
 
                 // update tooltip position
-                tooltip.SetAnchorAndOffset(Anchor.TopLeft, position / Active.GlobalScale);
+                tooltip.SetAnchorAndOffset(Anchor.TopLeft, position / instance.GlobalScale);
             };
             tooltip.CalcTextActualRectWithWrap();
             tooltip.BeforeDraw(tooltip);
@@ -409,7 +397,7 @@ namespace GeonBit.UI {
             // return tooltip object
             return tooltip;
         }
-        
+
         /// <summary>
         /// Set cursor style.
         /// </summary>
@@ -453,7 +441,7 @@ namespace GeonBit.UI {
             // end drawing
             spriteBatch.End();
         }
-        
+
         /// <summary>
         /// Update the UI manager. This function should be called from your Game 'Update()' function, as early as possible (eg before you update your game state).
         /// </summary>
@@ -646,7 +634,7 @@ namespace GeonBit.UI {
 
         public void AddScreen(Screen screen) {
             screen.InitializeScreen();
-            this.screens.Add(screen);            
+            this.screens.Add(screen);
         }
 
         public void SetCurrentScreen(Type screenType) {
@@ -664,7 +652,7 @@ namespace GeonBit.UI {
         /// Get xml serializer.
         /// </summary>
         /// <returns>XML serializer instance.</returns>
-        protected virtual XmlSerializer GetXmlSerializer() {
+        private XmlSerializer GetXmlSerializer() {
             return new XmlSerializer(Root.GetType(), Entity._serializableTypes.ToArray());
         }
 
@@ -734,4 +722,5 @@ namespace GeonBit.UI {
         #endregion
 
     }
+
 }

@@ -11,6 +11,7 @@
 using System.Text;
 using System.Collections.Generic;
 using GeonBit.UI.DataTypes;
+using GeonBit.UI.Enums;
 
 namespace GeonBit.UI.Entities
 {

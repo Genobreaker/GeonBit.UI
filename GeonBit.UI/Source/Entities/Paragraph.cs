@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GeonBit.UI.DataTypes;
 using System.Text;
+using GeonBit.UI.Enums;
 
 namespace GeonBit.UI.Entities
 {
@@ -552,7 +553,7 @@ namespace GeonBit.UI.Entities
             if (BackgroundColor.A > 0)
             {
                 // get background color
-                Color backColor = UserInterface.Active.DrawUtils.FixColorOpacity(BackgroundColor);
+                Color backColor = UserInterface.Instance.DrawUtils.FixColorOpacity(BackgroundColor);
 
                 // get destination rect to draw it
                 var rect = BackgroundColorUseBoxSize ? _destRect : _actualDestRect;
@@ -580,7 +581,7 @@ namespace GeonBit.UI.Entities
             }
 
             // get fill color
-            Color fillCol = UserInterface.Active.DrawUtils.FixColorOpacity(FillColor);
+            Color fillCol = UserInterface.Instance.DrawUtils.FixColorOpacity(FillColor);
 
             // draw text itself
             spriteBatch.DrawString(_currFont, _processedText, _position, fillCol,
@@ -598,7 +599,7 @@ namespace GeonBit.UI.Entities
         protected void DrawTextOutline(SpriteBatch spriteBatch, int outlineWidth)
         {
             // get outline color
-            Color outlineColor = UserInterface.Active.DrawUtils.FixColorOpacity(OutlineColor);
+            Color outlineColor = UserInterface.Instance.DrawUtils.FixColorOpacity(OutlineColor);
             DrawTextOutline(spriteBatch, _processedText, outlineWidth, _currFont, _actualScale, _position, outlineColor, _fontOrigin);
         }
 

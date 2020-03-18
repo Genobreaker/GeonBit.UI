@@ -9,6 +9,7 @@
 //-----------------------------------------------------------------------------
 #endregion
 using GeonBit.UI.DataTypes.Metadata;
+using GeonBit.UI.Enums;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -149,7 +150,7 @@ namespace GeonBit.UI.Entities
         /// <returns>Normalized value.</returns>
         protected int NormalizeValue(int value)
         {
-            if (!UserInterface.Active._isDeserializing)
+            if (!UserInterface.Instance._isDeserializing)
             {
                 // round to steps
                 float stepSize = (float)GetStepSize();
@@ -275,7 +276,7 @@ namespace GeonBit.UI.Entities
             float frameWidth = data.FrameWidth;
 
             // draw slider body
-            UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, new Vector2(frameWidth, 0f), 1, FillColor);
+            UserInterface.Instance.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, new Vector2(frameWidth, 0f), 1, FillColor);
 
             // calc frame actual height and scaling factor (this is needed to calc frame width in pixels)
             Vector2 frameSizeTexture = new Vector2(texture.Width * frameWidth, texture.Height);
@@ -292,7 +293,7 @@ namespace GeonBit.UI.Entities
             // now draw mark
             float markX = _destRect.X + _frameActualWidth + _markWidth * 0.5f + (_destRect.Width - _frameActualWidth * 2 - _markWidth) * GetValueAsPercent();
             Rectangle markDest = new Rectangle((int)System.Math.Round(markX) - _markWidth / 2, _destRect.Y, _markWidth, markHeight);
-            UserInterface.Active.DrawUtils.DrawImage(spriteBatch, markTexture, markDest, FillColor);
+            UserInterface.Instance.DrawUtils.DrawImage(spriteBatch, markTexture, markDest, FillColor);
 
             // call base draw function
             base.DrawEntity(spriteBatch, phase);
